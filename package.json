@@ -18,7 +18,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href https://kmturley.github.io/angular-google-sheets/dist/browser",
     "lint": "ng lint angular-google-sheets",
     "build:client-and-server-bundles": "ng build --prod && ng run angular-google-sheets:server:production",
     "build:prerender": "npm run build:client-and-server-bundles && npm run compile:server && npm run generate:prerender",
