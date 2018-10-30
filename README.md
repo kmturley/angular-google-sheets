@@ -16,8 +16,11 @@ Install dependencies using:
 Create an file at src/environments/environment.ts containing your google API details:
 
     export const environment = {
+        API_URL: 'https://sheets.googleapis.com/v4/spreadsheets/',
         CLIENT_ID: 'X.apps.googleusercontent.com',
-        SCOPE: 'https://www.googleapis.com/auth/X',
+        SCOPE: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+        SHEET_ID: 'X',
+        TOKEN: 'X',
         production: false,
     };
 
