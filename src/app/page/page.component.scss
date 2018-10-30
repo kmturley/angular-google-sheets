@@ -1,0 +1,42 @@
+.page-header {
+  background-color: #fff;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.page-details {
+  background-color: #eee;
+
+  .page-panel {
+    margin-bottom: 1.5rem;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  .page-images {
+    img {
+      display: inline-block;
+      max-width: 100%;
+    }
+  }
+
+  p:last-child {
+    margin: 0;
+  }
+}
+
+.page-tags {
+  background-color: #fff;
+
+  .col {
+    margin: 0 0 2rem 0;
+  }
+
+  li:last-child {
+    margin: 0;
+  }
+}

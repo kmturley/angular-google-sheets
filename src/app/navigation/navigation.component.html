@@ -1,0 +1,16 @@
+<div class="section grid">
+  <div class="col">
+    <a routerLink="">
+      <h3>Angular Google Sheets</h3>
+    </a>
+  </div>
+  <div class="col">
+    <ul class="list">
+      <li *ngFor="let route of routes">
+        <a class="list-item" routerLink="{{ route.path }}">
+          <span>{{ route.data.name }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

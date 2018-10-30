@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
-
 const routeTemplates: Routes = [
   {
     pathMatch: 'full',
-    path: '',
-    component: HomeComponent
+    path: 'modules/home',
+    loadChildren: './home/home.module#HomeModule'
   },
   {
     pathMatch: 'full',

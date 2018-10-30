@@ -32,12 +32,27 @@ export class AppRoutingService {
   }
 
   getData(resolve) {
-    return this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(items => {
-      console.log('items', items);
-      items.forEach((item) => {
-        this.addRoute(item);
-        resolve(this.routes);
+    return this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(routes => {
+      console.log('routes', routes);
+      this.routes.push({
+        pathMatch: 'full',
+        path: '',
+        loadChildren: './home/home.module#HomeModule',
+        data: {
+          name: 'Home'
+        }
       });
+      routes.forEach((route) => {
+        this.routes.push({
+          pathMatch: 'full',
+          path: this.slugifyPipe.transform(route.name),
+          loadChildren: './page/page.module#PageModule',
+          data: {
+            name: route.name
+          }
+        });
+      });
+      resolve(this.routes);
     });
   }
 
@@ -79,22 +94,6 @@ export class AppRoutingService {
       } else {
         observer.next({ name: 'test' });
         observer.complete();
-      }
-    });
-  }
-
-  addRoute(route) {
-    console.log('route', route);
-    if (!route.type) {
-      route.type = 'page';
-    }
-    this.routes.push({
-      pathMatch: 'full',
-      path: this.slugifyPipe.transform(route.name),
-      loadChildren: './' + route.type + '/' +
-        route.type + '.module#' + route.type.charAt(0).toUpperCase() + route.type.slice(1) + 'Module',
-      data: {
-        id: route.id
       }
     });
   }

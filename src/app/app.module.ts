@@ -8,9 +8,8 @@ import { AppRoutingService } from './app-routing.service';
 import { AuthService } from './shared/auth.service';
 
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
 import { TransferHttpCacheModule } from '@nguniversal/common';
-import { PageComponent } from './page/page.component';
+import { NavigationComponent } from './navigation/navigation.component';
 
 export function init(routeService: AppRoutingService) {
   return () => routeService.getRoutes();
@@ -20,8 +19,7 @@ export function init(routeService: AppRoutingService) {
   declarations: [
     SlugifyPipe,
     AppComponent,
-    HomeComponent,
-    PageComponent,
+    NavigationComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'my-app'}),
