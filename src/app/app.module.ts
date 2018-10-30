@@ -17,7 +17,6 @@ export function init(routeService: AppRoutingService) {
 
 @NgModule({
   declarations: [
-    SlugifyPipe,
     AppComponent,
     NavigationComponent,
   ],

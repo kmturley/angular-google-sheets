@@ -7,25 +7,6 @@ import { Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
-// export class Page {
-//   date: string;
-//   modules: object;
-//   name: string;
-//   url: string;
-
-//   constructor(data: {
-//     date?: string,
-//     modules?: object,
-//     name?: string,
-//     url?: string
-//   }) {
-//     if (data.date) { this.date = data.date; }
-//     if (data.modules) { this.modules = data.modules; }
-//     if (data.name) { this.name = data.name; }
-//     if (data.url) { this.url = data.url; }
-//   }
-// }
-
 @Injectable({
   providedIn: 'root'
 })
@@ -65,6 +46,7 @@ export class ApiService {
               items.push(newRow);
             }
           });
+          console.log('items', items);
           this.transferState.set(key, items);
           return items;
         })
