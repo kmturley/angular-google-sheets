@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SlugifyPipe } from 'angular-pipes';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingService } from './app-routing.service';
@@ -17,6 +18,7 @@ export function init(routeService: AppRoutingService) {
 
 @NgModule({
   declarations: [
+    SlugifyPipe,
     AppComponent,
     HomeComponent,
     PageComponent,
@@ -39,7 +41,8 @@ export function init(routeService: AppRoutingService) {
       useClass: AuthService,
       multi: true
     },
-    AppRoutingService
+    AppRoutingService,
+    SlugifyPipe
   ],
   bootstrap: [AppComponent]
 })

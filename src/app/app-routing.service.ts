@@ -1,9 +1,10 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Routes } from '@angular/router';
 import { Observer, Observable } from 'rxjs';
+import { SlugifyPipe } from 'angular-pipes';
 
+import { ApiService } from './shared/api.service';
 import { environment } from '../environments/environment';
 
 @Injectable()
@@ -12,19 +13,31 @@ export class AppRoutingService {
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
-    private http: HttpClient
+    private api: ApiService,
+    private slugifyPipe: SlugifyPipe
   ) { }
 
   getRoutes() {
     return new Promise((resolve, reject) => {
-        this.loadGapi().subscribe((a) => {
-            this.loadGapiAuth().subscribe((user: Object) => {
-            console.log('user', user);
-            if (isPlatformBrowser(this.platformId)) {
-                localStorage.setItem('token', user['getAuthResponse']().access_token);
-            }
-            });
+      this.loadGapi().subscribe((a) => {
+        this.loadGapiAuth().subscribe((user: Object) => {
+          console.log('user', user);
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('token', user['getAuthResponse']().access_token);
+          }
+          this.getData(resolve);
         });
+      });
+    });
+  }
+
+  getData(resolve) {
+    return this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(items => {
+      console.log('items', items);
+      items.forEach((item) => {
+        this.addRoute(item);
+        resolve(this.routes);
+      });
     });
   }
 
@@ -64,24 +77,25 @@ export class AppRoutingService {
           }
         });
       } else {
-        observer.next({name: 'test'});
+        observer.next({ name: 'test' });
         observer.complete();
       }
     });
   }
 
-  addRoutes(items) {
-    items.forEach(route => {
-      console.log('route', route);
-      this.routes.push({
-        pathMatch: 'full',
-        path: route.path,
-        loadChildren: './' + route.type + '/' +
-         route.type + '.module#' + route.type.charAt(0).toUpperCase() + route.type.slice(1) + 'Module',
-        data: {
-          id: route.id
-        }
-      });
+  addRoute(route) {
+    console.log('route', route);
+    if (!route.type) {
+      route.type = 'page';
+    }
+    this.routes.push({
+      pathMatch: 'full',
+      path: this.slugifyPipe.transform(route.name),
+      loadChildren: './' + route.type + '/' +
+        route.type + '.module#' + route.type.charAt(0).toUpperCase() + route.type.slice(1) + 'Module',
+      data: {
+        id: route.id
+      }
     });
   }
 }
