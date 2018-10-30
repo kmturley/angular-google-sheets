@@ -27,7 +27,6 @@ export class ApiService {
       if (environment.production && isPlatformBrowser(this.platformId)) {
         url = `./json/${id}.json`;
       }
-      console.log('get', id, url);
       return this.http.get(url).pipe(
         map(data => {
           const rows = data['sheets'][0]['data'][0]['rowData'];

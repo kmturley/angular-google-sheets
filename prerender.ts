@@ -30,7 +30,7 @@ getPaths().then((ROUTES: any[]) => {
   // create json folder
   const jsonPath = join(BROWSER_FOLDER, 'json');
   if (!existsSync(jsonPath)) {
-    ensureDirSync(jsonPath);
+    mkdirSync(jsonPath);
   }
 
   // Iterate each route path
@@ -39,8 +39,7 @@ getPaths().then((ROUTES: any[]) => {
 
     // Make sure the directory structure is there
     if (!existsSync(fullPath)) {
-      console.log('mkdirSync', fullPath);
-      ensureDirSync(fullPath);
+      mkdirSync(fullPath);
     }
 
     // Writes rendered HTML to index.html, replacing the file if it already exists.
@@ -52,11 +51,15 @@ getPaths().then((ROUTES: any[]) => {
       ]
     })).then((res: { output: string, data: object }) => {
       // write html file
+      console.log('WRITE HTML FILE', join(route, 'index.html'));
       writeFileSync(join(fullPath, 'index.html'), res.output);
 
       // write json files from TransferState objects
       Object.keys(res.data).forEach(item => {
-        writeFileSync(join(jsonPath, item + '.json'), JSON.stringify(res.data[item]));
+        // console.log('WRITE JSON FILE', join('json', item + '.json'));
+        // writeFileSync(join(jsonPath, item + 'routes.json'), JSON.stringify(res.data[item]));
+        console.log('WRITE JSON FILE', join('json', 'routes.json'));
+        writeFileSync(join(jsonPath, 'routes.json'), JSON.stringify(res.data[item]));
       });
     });
   });
