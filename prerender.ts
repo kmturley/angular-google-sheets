@@ -1,7 +1,7 @@
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
-import {readFileSync, writeFileSync, existsSync, ensureDirSync} from 'fs-extra';
+import {readFileSync, writeFileSync, existsSync, mkdirSync} from 'fs';
 import {join} from 'path';
 
 import {enableProdMode} from '@angular/core';
@@ -14,7 +14,7 @@ import {renderModuleFactory} from './utils';
 import {getPaths} from './static.paths';
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./dist/server/main');
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./server/main');
 
 const BROWSER_FOLDER = join(process.cwd(), 'browser');
 
@@ -30,7 +30,7 @@ getPaths().then((ROUTES: any[]) => {
   // create json folder
   const jsonPath = join(BROWSER_FOLDER, 'json');
   if (!existsSync(jsonPath)) {
-    ensureDirSync(jsonPath);
+    mkdirSync(jsonPath);
   }
 
   // Iterate each route path
@@ -39,8 +39,7 @@ getPaths().then((ROUTES: any[]) => {
 
     // Make sure the directory structure is there
     if (!existsSync(fullPath)) {
-      console.log('mkdirSync', fullPath);
-      ensureDirSync(fullPath);
+      mkdirSync(fullPath);
     }
 
     // Writes rendered HTML to index.html, replacing the file if it already exists.
@@ -52,11 +51,15 @@ getPaths().then((ROUTES: any[]) => {
       ]
     })).then((res: { output: string, data: object }) => {
       // write html file
+      console.log('WRITE HTML FILE', join(route, 'index.html'));
       writeFileSync(join(fullPath, 'index.html'), res.output);
 
       // write json files from TransferState objects
       Object.keys(res.data).forEach(item => {
-        writeFileSync(join(jsonPath, item + '.json'), JSON.stringify(res.data[item]));
+        // console.log('WRITE JSON FILE', join('json', item + '.json'));
+        // writeFileSync(join(jsonPath, item + 'routes.json'), JSON.stringify(res.data[item]));
+        console.log('WRITE JSON FILE', join('json', 'routes.json'));
+        writeFileSync(join(jsonPath, 'routes.json'), JSON.stringify(res.data[item]));
       });
     });
   });

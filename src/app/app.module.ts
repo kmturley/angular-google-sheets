@@ -3,6 +3,7 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SlugifyPipe } from 'angular-pipes';
 
+import { ApiService } from './shared/api.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingService } from './app-routing.service';
 import { AuthService } from './shared/auth.service';
@@ -39,6 +40,7 @@ export function init(routeService: AppRoutingService) {
       useClass: AuthService,
       multi: true
     },
+    ApiService,
     AppRoutingService,
     SlugifyPipe
   ],
