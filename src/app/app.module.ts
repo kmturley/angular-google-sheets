@@ -30,7 +30,7 @@ export function init(routeService: AppRoutingService) {
     ReactiveFormsModule,
     TransferHttpCacheModule,
     AppRoutingModule,
-    SharedModule.forRoot()
+    SharedModule
   ],
   providers: [
     {

@@ -16,9 +16,9 @@ export function getPaths() {
       data = JSON.parse(data);
       if (data['error']) { return reject(data); }
       const rows = data['sheets'][0]['data'][0]['rowData'];
-      rows.forEach((row, index) => {
-        if (index > 0) {
-          routes.push(slugify(row['values'][0].formattedValue, { lower: true }));
+      rows.forEach((rowItem, rowIndex) => {
+        if (rowIndex > 0 && rowItem['values'][0].formattedValue) {
+          routes.push(slugify(rowItem['values'][0].formattedValue, { lower: true }));
         }
       });
       resolve(routes);

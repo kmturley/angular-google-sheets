@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { SharedModule } from './shared/shared.module';
+
 const routeTemplates: Routes = [
   {
     pathMatch: 'full',
@@ -15,8 +17,13 @@ const routeTemplates: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routeTemplates)],
-    exports: [RouterModule],
+    imports: [
+      RouterModule.forRoot(routeTemplates),
+      SharedModule.forRoot()
+    ],
+    exports: [
+      RouterModule
+    ],
     providers: []
 })
 export class AppRoutingModule { }

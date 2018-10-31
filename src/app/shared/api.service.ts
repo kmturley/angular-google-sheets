@@ -29,26 +29,30 @@ export class ApiService {
       }
       return this.http.get(url).pipe(
         map(data => {
-          const rows = data['sheets'][0]['data'][0]['rowData'];
-          const items = [];
-          rows.forEach((row, index) => {
-            if (index > 0) {
-              const newRow = {};
-              row['values'].forEach((rowItem, rowIndex) => {
-                const rowKey = rows[0]['values'][rowIndex].formattedValue;
-                let rowValue = rowItem.formattedValue;
-                if (rowKey && rowValue) {
-                  if (rowKey.charAt(rowKey.length - 1) === 's') {
-                    rowValue = rowItem.formattedValue.split(', ');
+          let items = [];
+          if (environment.production && isPlatformBrowser(this.platformId)) {
+            items = data as Array<Object>;
+          } else {
+            const rows = data['sheets'][0]['data'][0]['rowData'];
+            rows.forEach((row, index) => {
+              if (index > 0) {
+                const newRow = {};
+                row['values'].forEach((rowItem, rowIndex) => {
+                  const rowKey = rows[0]['values'][rowIndex].formattedValue;
+                  let rowValue = rowItem.formattedValue;
+                  if (rowKey && rowValue) {
+                    if (rowKey.charAt(rowKey.length - 1) === 's') {
+                      rowValue = rowItem.formattedValue.split(', ');
+                    }
+                    newRow[rowKey] = rowValue;
                   }
-                  newRow[rowKey] = rowValue;
+                });
+                if (newRow['name']) {
+                  items.push(newRow);
                 }
-              });
-              if (newRow['name']) {
-                items.push(newRow);
               }
-            }
-          });
+            });
+          }
           console.log('items', items);
           this.transferState.set(key, items);
           return items;

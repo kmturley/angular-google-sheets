@@ -1,7 +1,7 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SlugifyPipe } from 'angular-pipes';
+import { SlugifyPipe } from '../shared/slugify.pipe';
 
 import { environment } from '../../environments/environment';
 import { ApiService } from '../shared/api.service';
@@ -43,9 +43,7 @@ export class HomeComponent implements OnInit {
       this.selectTechnologies = new FormControl(params['technologies'] || 'all');
       this.selectYears = new FormControl(params['years'] || 'all');
       this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(pages => {
-        console.log('HomeComponent', pages);
         this.pages = pages.filter((page) => {
-          console.log('page', page);
           // TODO make this more DRY
           this.activities = this.activities ? this.activities.concat(page.activities) : page.activities;
           this.industries = this.industries ? this.industries.concat(page.industries) : page.industries;
@@ -99,13 +97,11 @@ export class HomeComponent implements OnInit {
           }
           return page;
         });
-        console.log('activities', this.activities);
       });
     });
   }
 
   onChange(type, val) {
-    console.log('onChange', type, val);
     this.params.queryParams[type] = val;
     this.router.navigate([], this.params);
   }
@@ -113,5 +109,4 @@ export class HomeComponent implements OnInit {
   login() {
     window['gapi'].auth2.getAuthInstance().signIn();
   }
-
 }
