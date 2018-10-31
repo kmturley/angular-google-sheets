@@ -19,15 +19,19 @@ export class AppRoutingService {
 
   getRoutes() {
     return new Promise((resolve, reject) => {
-      this.loadGapi().subscribe((a) => {
-        this.loadGapiAuth().subscribe((user: Object) => {
-          console.log('user', user);
-          if (isPlatformBrowser(this.platformId)) {
-            localStorage.setItem('token', user['getAuthResponse']().access_token);
-          }
-          this.getData(resolve);
+      if (environment.production === true) {
+        this.getData(resolve);
+      } else {
+        this.loadGapi().subscribe((a) => {
+          this.loadGapiAuth().subscribe((user: Object) => {
+            console.log('user', user);
+            if (isPlatformBrowser(this.platformId)) {
+              localStorage.setItem('token', user['getAuthResponse']().access_token);
+            }
+            this.getData(resolve);
+          });
         });
-      });
+      }
     });
   }
 
