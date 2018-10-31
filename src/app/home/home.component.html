@@ -1,4 +1,48 @@
-<div class="section">
-  <p>home works!</p>
-  <button (click)="login()">Login</button>
+<div class="section pages">
+  <div class="filters">
+    <div class="form-input">
+      <label for="activities">Activities</label>
+      <select [formControl]="selectActivities" (change)="onChange('activities', $event.target.value)" name="activities" id="activities">
+        <option value="all">All</option>
+        <option *ngFor="let activity of activities" [value]="activity | slugify">{{ activity }}</option>
+      </select>
+    </div>
+    <div class="form-input">
+      <label for="industries">Industries</label>
+      <select [formControl]="selectIndustries" (change)="onChange('industries', $event.target.value)" name="industries" id="industries">
+        <option value="all">All</option>
+        <option *ngFor="let industry of industries" [value]="industry | slugify">{{ industry }}</option>
+      </select>
+    </div>
+    <div class="form-input">
+      <label for="locations">Locations</label>
+      <select [formControl]="selectLocations" (change)="onChange('locations', $event.target.value)" name="locations" id="locations">
+        <option value="all">All</option>
+        <option *ngFor="let location of locations" [value]="location | slugify">{{ location }}</option>
+      </select>
+    </div>
+    <div class="form-input">
+      <label for="technologies">Technologies</label>
+      <select [formControl]="selectTechnologies" (change)="onChange('technologies', $event.target.value)" name="technologies" id="technologies">
+        <option value="all">All</option>
+        <option *ngFor="let technology of technologies" [value]="technology | slugify">{{ technology }}</option>
+      </select>
+    </div>
+    <div class="form-input">
+      <label for="years">Years</label>
+      <select [formControl]="selectYears" (change)="onChange('years', $event.target.value)" name="years" id="years">
+        <option value="all">All</option>
+        <option *ngFor="let year of years" [value]="year | slugify">{{ year }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid">
+    <a class="col page" *ngFor="let page of pages" routerLink="{{ page.name | slugify }}">
+      <img [src]="page.images[0]" alt="Image" />
+      <h3>{{ page.name }}</h3>
+    </a>
+  </div>
 </div>
+<!-- <div class="section">
+  <button (click)="login()">Login</button>
+</div> -->

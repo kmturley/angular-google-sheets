@@ -1,0 +1,29 @@
+.filters {
+  margin-bottom: 1rem;
+
+  .form-input {
+    margin: 0 1rem 1rem 0;
+  }
+  label {
+    display: block;
+  }
+  select {
+    width: 100%;
+  }
+}
+
+.page {
+  margin-right: 1rem;
+  &:last-child {
+    margin-right: 0;
+  }
+  img {
+    max-width: 100%; 
+  }
+}
+
+@media (min-width: 30em) {
+  .filters {
+    display: flex;
+  }
+}
