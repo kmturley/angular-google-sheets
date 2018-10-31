@@ -1,7 +1,7 @@
 // Load zone.js for the server.
 import 'zone.js/dist/zone-node';
 import 'reflect-metadata';
-import {readFileSync, writeFileSync, existsSync, ensureDirSync} from 'fs-extra';
+import {readFileSync, writeFileSync, existsSync, mkdirSync} from 'fs-extra';
 import {join} from 'path';
 
 import {enableProdMode} from '@angular/core';
@@ -14,7 +14,7 @@ import {renderModuleFactory} from './utils';
 import {getPaths} from './static.paths';
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./dist/server/main');
+const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./server/main');
 
 const BROWSER_FOLDER = join(process.cwd(), 'browser');
 
