@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home.component';
-import { SlugifyPipe } from 'angular-pipes';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -13,8 +13,9 @@ import { SlugifyPipe } from 'angular-pipes';
     ReactiveFormsModule,
     RouterModule.forChild([
       { path: '', component: HomeComponent, pathMatch: 'full'}
-    ])
+    ]),
+    SharedModule
   ],
-  declarations: [HomeComponent, SlugifyPipe]
+  declarations: [HomeComponent]
 })
 export class HomeModule { }

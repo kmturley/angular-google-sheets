@@ -10,7 +10,7 @@ package-lock.json
 /node_modules/
 /typings/
 /tsd_typings/
-/dist/
+# /dist/
 /dist-server/
 /compiled/
 
