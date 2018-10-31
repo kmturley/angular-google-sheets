@@ -2,7 +2,7 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Routes } from '@angular/router';
 import { Observer, Observable } from 'rxjs';
-import { SlugifyPipe } from 'angular-pipes';
+import { SlugifyPipe } from './shared/slugify.pipe';
 
 import { ApiService } from './shared/api.service';
 import { environment } from '../environments/environment';

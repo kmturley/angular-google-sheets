@@ -1,7 +1,7 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { SlugifyPipe } from 'angular-pipes';
+import { SlugifyPipe } from '../shared/slugify.pipe';
 
 import { environment } from '../../environments/environment';
 import { ApiService } from '../shared/api.service';
