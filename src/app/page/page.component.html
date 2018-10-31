@@ -4,35 +4,31 @@
   </div>
 </div>
 <div class="page-details">
-  <div class="section grid">
-    <div class="col page-panels">
-      <div class="page-panel">
-        <h3>Goals</h3>
-        <p>{{ page.goals }}</p>
+  <div class="section">
+    <div class="grid-2">
+      <div class="col page-panels">
+        <div class="page-panel">
+          <h3>Goals</h3>
+          <p>{{ page.goals }}</p>
+        </div>
+        <div class="page-panel">
+          <h3>Approach</h3>
+          <p>{{ page.approach }}</p>
+        </div>
+        <div class="page-panel">
+          <h3>Results</h3>
+          <p>{{ page.results }}</p>
+        </div>
       </div>
-      <div class="page-panel">
-        <h3>Approach</h3>
-        <p>{{ page.approach }}</p>
+      <div class="col page-images">
+        <img *ngFor="let image of page.images" [src]="image" alt="Image" />
       </div>
-      <div class="page-panel">
-        <h3>Results</h3>
-        <p>{{ page.results }}</p>
-      </div>
-    </div>
-    <div class="col page-images">
-      <img *ngFor="let image of page.images" [src]="image" alt="Image" />
     </div>
   </div>
 </div>
 <div class="page-tags">
   <div class="section">
-    <div class="grid">
-      <div class="col">
-        <h3>Locations</h3>
-        <ul>
-          <li *ngFor="let location of page.locations">{{ location }}</li>
-        </ul>
-      </div>
+    <div class="grid-3">
       <div class="col">
         <h3>Industries</h3>
         <ul>
@@ -52,7 +48,13 @@
         </ul>
       </div>
     </div>
-    <div class="grid">
+    <div class="grid-3">
+      <div class="col">
+        <h3>Locations</h3>
+        <ul>
+          <li *ngFor="let location of page.locations">{{ location }}</li>
+        </ul>
+      </div>
       <div class="col">
         <h3>Contacts</h3>
         <ul>

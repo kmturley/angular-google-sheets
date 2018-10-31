@@ -1,5 +1,6 @@
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SlugifyPipe } from 'angular-pipes';
 
@@ -24,9 +25,11 @@ export function init(routeService: AppRoutingService) {
   imports: [
     BrowserModule.withServerTransition({appId: 'my-app'}),
     BrowserTransferStateModule,
+    FormsModule,
     HttpClientModule,
-    AppRoutingModule,
+    ReactiveFormsModule,
     TransferHttpCacheModule,
+    AppRoutingModule
   ],
   providers: [
     {

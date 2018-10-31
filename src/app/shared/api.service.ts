@@ -37,12 +37,16 @@ export class ApiService {
               row['values'].forEach((rowItem, rowIndex) => {
                 const rowKey = rows[0]['values'][rowIndex].formattedValue;
                 let rowValue = rowItem.formattedValue;
-                if (rowKey.charAt(rowKey.length - 1) === 's') {
-                  rowValue = rowItem.formattedValue.split(', ');
+                if (rowKey && rowValue) {
+                  if (rowKey.charAt(rowKey.length - 1) === 's') {
+                    rowValue = rowItem.formattedValue.split(', ');
+                  }
+                  newRow[rowKey] = rowValue;
                 }
-                newRow[rowKey] = rowValue;
               });
-              items.push(newRow);
+              if (newRow['name']) {
+                items.push(newRow);
+              }
             }
           });
           console.log('items', items);
