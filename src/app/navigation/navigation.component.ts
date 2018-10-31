@@ -19,8 +19,7 @@ export class NavigationComponent implements OnInit {
 
   ngOnInit() {
     this.routes = this.routeService.routes;
-    const routerConfig = this.router.config;
-    routerConfig.pop(); // remove the default angular blank route
+    const routerConfig = [];
     this.routes.forEach(route => {
       routerConfig.push(route);
     });

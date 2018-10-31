@@ -33,7 +33,6 @@ export class AppRoutingService {
 
   getData(resolve) {
     return this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(routes => {
-      console.log('routes', routes);
       this.routes.push({
         pathMatch: 'full',
         path: '',
