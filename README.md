@@ -24,6 +24,10 @@ Create an file at src/environments/environment.ts containing your google API det
         production: false,
     };
 
+Create a Google spreadsheet with named columns. You can duplicate my template here:
+
+    https://docs.google.com/spreadsheets/d/1PGFoY15Wi0RFxjycqF_oXYKdjH8IM5k3_IxJLFI90aU/edit#gid=0
+
 
 ## Usage
 
