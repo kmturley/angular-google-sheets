@@ -43,7 +43,8 @@
     </a>
   </div>
   <div class="controls">
-    <button class="generate" (click)="generate(pages)">Generate Slides</button>
+    <button class="generate" (click)="generate(pages)">Generate {{ pages.length }} Slide{{ pages.length == 1 ? '' : 's' }}</button>
+    <div class="message" [innerHTML]="message"></div>
     <!-- <button class="login" (click)="login()">Login to Google</button> -->
   </div>
 </div>

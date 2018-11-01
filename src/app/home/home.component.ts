@@ -2,6 +2,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SlugifyPipe } from '../shared/slugify.pipe';
+import { forkJoin } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ApiService } from '../shared/api.service';
@@ -13,6 +14,7 @@ import { Page } from '../page/page.component';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
+  message: String;
   pages: Array<Page>;
   params = { queryParams: {} };
 
@@ -112,16 +114,20 @@ export class HomeComponent implements OnInit {
 
   generate(pages) {
     console.log('generate', pages);
-    this.copyFile(environment.SLIDE_ID, 'Case Studies: ' + new Date().toTimeString()).subscribe((copyData) => {
+    const name = 'Case Studies: ' + new Date().toTimeString();
+    this.message = `Copying ${environment.SLIDE_ID} to ${name}<br/>`;
+    this.copyFile(environment.SLIDE_ID, name).subscribe((copyData) => {
+      this.message += `Loading ${copyData.id}<br/>`;
       this.getFile(copyData.id).subscribe((fileData) => {
-        const promises = [];
+        this.message += `Creating ${pages.length} slides<br/>`;
+        const observables = [];
         pages.forEach((page) => {
-          promises.push(this.duplicateSlide(copyData.id, fileData.slides[0].objectId).subscribe((duplicateData) => {
-            return this.updateSlide(copyData.id, page);
-          }));
+          observables.push(this.updateSlide(copyData.id, fileData.slides[0].objectId, page));
         });
-        Promise.all(promises).then((completeData) => {
-          console.log('Promise', completeData);
+        forkJoin(observables).subscribe((observableData) => {
+          this.message += `Complete! <a href="https://docs.google.com/presentation/d/${copyData.id}/edit" target="_blank">\
+          https://docs.google.com/presentation/d/${copyData.id}/edit</a><br/>`;
+          console.log('generate complete', observableData);
         });
       });
     });
@@ -137,23 +143,15 @@ export class HomeComponent implements OnInit {
     return this.api.get(`${environment.API_SLIDES_URL}${id}`, 'slide');
   }
 
-  duplicateSlide(id, objectId) {
-    console.log('duplicateSlide', id, objectId);
+  updateSlide(id, objectId, item) {
+    console.log('updateSlide', id, item);
     return this.api.post(`${environment.API_SLIDES_URL}${id}:batchUpdate`, {
       requests: [
         {
           duplicateObject: {
             objectId: objectId
           }
-        }
-      ]
-    }, 'slide');
-  }
-
-  updateSlide(id, item) {
-    console.log('updateSlide', id, item);
-    return this.api.post(`${environment.API_SLIDES_URL}${id}:batchUpdate`, {
-      requests: [
+        },
         {
           replaceAllText: {
             replaceText: item.name,
