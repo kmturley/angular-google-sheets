@@ -109,4 +109,92 @@ export class HomeComponent implements OnInit {
   login() {
     window['gapi'].auth2.getAuthInstance().signIn();
   }
+
+  generate(pages) {
+    console.log('generate', pages);
+    this.copyFile(environment.SLIDE_ID, 'Case Studies: ' + new Date().toTimeString()).subscribe((copyData) => {
+      this.getFile(copyData.id).subscribe((fileData) => {
+        const promises = [];
+        pages.forEach((page) => {
+          promises.push(this.duplicateSlide(copyData.id, fileData.slides[0].objectId).subscribe((duplicateData) => {
+            return this.updateSlide(copyData.id, page);
+          }));
+        });
+        Promise.all(promises).then((completeData) => {
+          console.log('Promise', completeData);
+        });
+      });
+    });
+  }
+
+  copyFile(id, name) {
+    console.log('copyFile', id, name);
+    return this.api.post(`${environment.API_DRIVE}${id}/copy`, { 'name': name }, 'slide');
+  }
+
+  getFile(id) {
+    console.log('getFile', id);
+    return this.api.get(`${environment.API_SLIDES_URL}${id}`, 'slide');
+  }
+
+  duplicateSlide(id, objectId) {
+    console.log('duplicateSlide', id, objectId);
+    return this.api.post(`${environment.API_SLIDES_URL}${id}:batchUpdate`, {
+      requests: [
+        {
+          duplicateObject: {
+            objectId: objectId
+          }
+        }
+      ]
+    }, 'slide');
+  }
+
+  updateSlide(id, item) {
+    console.log('updateSlide', id, item);
+    return this.api.post(`${environment.API_SLIDES_URL}${id}:batchUpdate`, {
+      requests: [
+        {
+          replaceAllText: {
+            replaceText: item.name,
+            containsText: {
+              text: '{{ name }}',
+              matchCase: true
+            }
+          }
+        },
+        {
+          replaceAllShapesWithImage: {
+            imageUrl: item.images[0],
+            replaceMethod: 'CENTER_INSIDE',
+            containsText: {
+              text: '{{ image }}',
+              matchCase: true
+            }
+          }
+        }
+      ]
+    }, 'slide');
+  }
+
+  // update() {
+  //   this.api.get(`${environment.API_SLIDES_URL}${environment.SLIDE_ID}`, 'slides').subscribe(data => {
+  //     this.api.post(`${environment.API_SLIDES_URL}${environment.SLIDE_ID}:batchUpdate`, {
+  //         'requests': [
+  //           {
+  //             'insertText' : {
+  //               'objectId': data.slides[0].pageElements[0].objectId,
+  //               'text': 'Dynamic! ' + new Date().getTime(),
+  //               'insertionIndex': 0
+  //             }
+  //           }
+  //         ],
+  //         'writeControl': {
+  //           'requiredRevisionId': data.revisionId
+  //         }
+  //       }, 'slides').subscribe(postData => {
+  //       console.log('generate post', postData);
+  //     });
+  //   });
+  // }
 }

@@ -29,29 +29,34 @@ export class ApiService {
       }
       return this.http.get(url).pipe(
         map(data => {
-          let items = [];
+          let items;
           if (environment.production && isPlatformBrowser(this.platformId)) {
-            items = data as Array<Object>;
+            items = data;
           } else {
-            const rows = data['sheets'][0]['data'][0]['rowData'];
-            rows.forEach((row, index) => {
-              if (index > 0) {
-                const newRow = {};
-                row['values'].forEach((rowItem, rowIndex) => {
-                  const rowKey = rows[0]['values'][rowIndex].formattedValue;
-                  let rowValue = rowItem.formattedValue;
-                  if (rowKey && rowValue) {
-                    if (rowKey.charAt(rowKey.length - 1) === 's') {
-                      rowValue = rowItem.formattedValue.split(', ');
+            items = [];
+            if (data['sheets']) {
+              const rows = data['sheets'][0]['data'][0]['rowData'];
+              rows.forEach((row, index) => {
+                if (index > 0) {
+                  const newRow = {};
+                  row['values'].forEach((rowItem, rowIndex) => {
+                    const rowKey = rows[0]['values'][rowIndex].formattedValue;
+                    let rowValue = rowItem.formattedValue;
+                    if (rowKey && rowValue) {
+                      if (rowKey.charAt(rowKey.length - 1) === 's') {
+                        rowValue = rowItem.formattedValue.split(', ');
+                      }
+                      newRow[rowKey] = rowValue;
                     }
-                    newRow[rowKey] = rowValue;
+                  });
+                  if (newRow['name']) {
+                    items.push(newRow);
                   }
-                });
-                if (newRow['name']) {
-                  items.push(newRow);
                 }
-              }
-            });
+              });
+            } else {
+              items = data;
+            }
           }
           console.log('items', items);
           this.transferState.set(key, items);
@@ -62,28 +67,10 @@ export class ApiService {
   }
 
   post(url, data, id): Observable<any> {
-    const key = makeStateKey(id);
-    if (this.transferState.hasKey(key)) {
-      const item = this.transferState.get(key, null);
-      return of(item);
-    } else {
-      if (environment.production && isPlatformBrowser(this.platformId)) {
-        url = `./json/${id}.json`;
-        return this.http.get(url, data).pipe(
-          map(items => {
-            this.transferState.set(key, items);
-            return items;
-          })
-        );
-      } else {
-        // console.log('post', url);
-        return this.http.post(url, data).pipe(
-          map(items => {
-            this.transferState.set(key, items);
-            return items;
-          })
-        );
-      }
-    }
+    return this.http.post(url, data).pipe(
+      map(items => {
+        return items;
+      })
+    );
   }
 }
