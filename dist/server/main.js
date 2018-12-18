@@ -168,20 +168,14 @@ var AppRoutingService = /** @class */ (function () {
     AppRoutingService.prototype.getRoutes = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            if (environment_1.environment.production === true) {
-                _this.getData(resolve);
-            }
-            else {
-                _this.loadGapi().subscribe(function (a) {
-                    _this.loadGapiAuth().subscribe(function (user) {
-                        console.log('user', user);
-                        if (common_1.isPlatformBrowser(_this.platformId)) {
-                            localStorage.setItem('token', user['getAuthResponse']().access_token);
-                        }
-                        _this.getData(resolve);
-                    });
+            _this.loadGapi().subscribe(function (a) {
+                _this.loadGapiAuth().subscribe(function (user) {
+                    if (common_1.isPlatformBrowser(_this.platformId)) {
+                        localStorage.setItem('token', user['getAuthResponse']().access_token);
+                    }
+                    _this.getData(resolve);
                 });
-            }
+            });
         });
     };
     AppRoutingService.prototype.getData = function (resolve) {
@@ -232,7 +226,7 @@ var AppRoutingService = /** @class */ (function () {
         var _this = this;
         return rxjs_1.Observable.create(function (observer) {
             if (common_1.isPlatformBrowser(_this.platformId)) {
-                window['gapi'].load('auth2', function () {
+                window['gapi'].load('client:auth2', function () {
                     var auth2 = window['gapi'].auth2.init({
                         client_id: environment_1.environment.CLIENT_ID,
                         scope: environment_1.environment.SCOPE
@@ -241,9 +235,7 @@ var AppRoutingService = /** @class */ (function () {
                         observer.next(user);
                         observer.complete();
                     });
-                    if (auth2.isSignedIn.get() === true) {
-                        auth2.signIn();
-                    }
+                    auth2.signIn();
                 });
             }
             else {
@@ -442,7 +434,7 @@ function View_HomeComponent_6(_l) { return i1.ɵvid(0, [(_l()(), i1.ɵeld(0, 0, 
         var pd_0 = (i1.ɵnov(_v, 1).onClick($event.button, $event.ctrlKey, $event.metaKey, $event.shiftKey) !== false);
         ad = (pd_0 && ad);
     } return ad; }, null, null)), i1.ɵdid(1, 671744, null, 0, i3.RouterLinkWithHref, [i3.Router, i3.ActivatedRoute, i4.LocationStrategy], { routerLink: [0, "routerLink"] }, null), i1.ɵppd(2, 1), (_l()(), i1.ɵeld(3, 0, null, null, 0, "img", [["alt", "Image"]], [[8, "src", 4]], null, null, null, null)), (_l()(), i1.ɵeld(4, 0, null, null, 1, "h3", [], null, null, null, null, null)), (_l()(), i1.ɵted(5, null, ["", ""]))], function (_ck, _v) { var currVal_2 = i1.ɵinlineInterpolate(1, "", i1.ɵunv(_v, 1, 0, _ck(_v, 2, 0, i1.ɵnov(_v.parent, 0), _v.context.$implicit.name)), ""); _ck(_v, 1, 0, currVal_2); }, function (_ck, _v) { var currVal_0 = i1.ɵnov(_v, 1).target; var currVal_1 = i1.ɵnov(_v, 1).href; _ck(_v, 0, 0, currVal_0, currVal_1); var currVal_3 = _v.context.$implicit.images[0]; _ck(_v, 3, 0, currVal_3); var currVal_4 = _v.context.$implicit.name; _ck(_v, 5, 0, currVal_4); }); }
-function View_HomeComponent_0(_l) { return i1.ɵvid(0, [i1.ɵpid(0, i5.SlugifyPipe, []), (_l()(), i1.ɵeld(1, 0, null, null, 79, "div", [["class", "section pages"]], null, null, null, null, null)), (_l()(), i1.ɵeld(2, 0, null, null, 75, "div", [["class", "filters"]], null, null, null, null, null)), (_l()(), i1.ɵeld(3, 0, null, null, 14, "div", [["class", "form-input"]], null, null, null, null, null)), (_l()(), i1.ɵeld(4, 0, null, null, 1, "label", [["for", "activities"]], null, null, null, null, null)), (_l()(), i1.ɵted(-1, null, ["Activities"])), (_l()(), i1.ɵeld(6, 0, null, null, 11, "select", [["id", "activities"], ["name", "activities"]], [[2, "ng-untouched", null], [2, "ng-touched", null], [2, "ng-pristine", null], [2, "ng-dirty", null], [2, "ng-valid", null], [2, "ng-invalid", null], [2, "ng-pending", null]], [[null, "change"], [null, "blur"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("change" === en)) {
+function View_HomeComponent_0(_l) { return i1.ɵvid(0, [i1.ɵpid(0, i5.SlugifyPipe, []), (_l()(), i1.ɵeld(1, 0, null, null, 92, "div", [["class", "section pages"]], null, null, null, null, null)), (_l()(), i1.ɵeld(2, 0, null, null, 84, "div", [["class", "filters"]], null, null, null, null, null)), (_l()(), i1.ɵeld(3, 0, null, null, 14, "div", [["class", "form-input"]], null, null, null, null, null)), (_l()(), i1.ɵeld(4, 0, null, null, 1, "label", [["for", "activities"]], null, null, null, null, null)), (_l()(), i1.ɵted(-1, null, ["Activities"])), (_l()(), i1.ɵeld(6, 0, null, null, 11, "select", [["id", "activities"], ["name", "activities"]], [[2, "ng-untouched", null], [2, "ng-touched", null], [2, "ng-pristine", null], [2, "ng-dirty", null], [2, "ng-valid", null], [2, "ng-invalid", null], [2, "ng-pending", null]], [[null, "change"], [null, "blur"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("change" === en)) {
         var pd_0 = (i1.ɵnov(_v, 7).onChange($event.target.value) !== false);
         ad = (pd_0 && ad);
     } if (("blur" === en)) {
@@ -487,7 +479,25 @@ function View_HomeComponent_0(_l) { return i1.ɵvid(0, [i1.ɵpid(0, i5.SlugifyPi
     } if (("change" === en)) {
         var pd_2 = (_co.onChange("years", $event.target.value) !== false);
         ad = (pd_2 && ad);
-    } return ad; }, null, null)), i1.ɵdid(67, 16384, null, 0, i2.SelectControlValueAccessor, [i1.Renderer2, i1.ElementRef], null, null), i1.ɵprd(1024, null, i2.NG_VALUE_ACCESSOR, function (p0_0) { return [p0_0]; }, [i2.SelectControlValueAccessor]), i1.ɵdid(69, 540672, null, 0, i2.FormControlDirective, [[8, null], [8, null], [6, i2.NG_VALUE_ACCESSOR], [2, i2.ɵangular_packages_forms_forms_j]], { form: [0, "form"] }, null), i1.ɵprd(2048, null, i2.NgControl, null, [i2.FormControlDirective]), i1.ɵdid(71, 16384, null, 0, i2.NgControlStatus, [[4, i2.NgControl]], null, null), (_l()(), i1.ɵeld(72, 0, null, null, 3, "option", [["value", "all"]], null, null, null, null, null)), i1.ɵdid(73, 147456, null, 0, i2.NgSelectOption, [i1.ElementRef, i1.Renderer2, [2, i2.SelectControlValueAccessor]], { value: [0, "value"] }, null), i1.ɵdid(74, 147456, null, 0, i2.ɵangular_packages_forms_forms_r, [i1.ElementRef, i1.Renderer2, [8, null]], { value: [0, "value"] }, null), (_l()(), i1.ɵted(-1, null, ["All"])), (_l()(), i1.ɵand(16777216, null, null, 1, null, View_HomeComponent_5)), i1.ɵdid(77, 278528, null, 0, i4.NgForOf, [i1.ViewContainerRef, i1.TemplateRef, i1.IterableDiffers], { ngForOf: [0, "ngForOf"] }, null), (_l()(), i1.ɵeld(78, 0, null, null, 2, "div", [["class", "grid"]], null, null, null, null, null)), (_l()(), i1.ɵand(16777216, null, null, 1, null, View_HomeComponent_6)), i1.ɵdid(80, 278528, null, 0, i4.NgForOf, [i1.ViewContainerRef, i1.TemplateRef, i1.IterableDiffers], { ngForOf: [0, "ngForOf"] }, null)], function (_ck, _v) { var _co = _v.component; var currVal_7 = _co.selectActivities; _ck(_v, 9, 0, currVal_7); var currVal_8 = "all"; _ck(_v, 13, 0, currVal_8); var currVal_9 = "all"; _ck(_v, 14, 0, currVal_9); var currVal_10 = _co.activities; _ck(_v, 17, 0, currVal_10); var currVal_18 = _co.selectIndustries; _ck(_v, 24, 0, currVal_18); var currVal_19 = "all"; _ck(_v, 28, 0, currVal_19); var currVal_20 = "all"; _ck(_v, 29, 0, currVal_20); var currVal_21 = _co.industries; _ck(_v, 32, 0, currVal_21); var currVal_29 = _co.selectLocations; _ck(_v, 39, 0, currVal_29); var currVal_30 = "all"; _ck(_v, 43, 0, currVal_30); var currVal_31 = "all"; _ck(_v, 44, 0, currVal_31); var currVal_32 = _co.locations; _ck(_v, 47, 0, currVal_32); var currVal_40 = _co.selectTechnologies; _ck(_v, 54, 0, currVal_40); var currVal_41 = "all"; _ck(_v, 58, 0, currVal_41); var currVal_42 = "all"; _ck(_v, 59, 0, currVal_42); var currVal_43 = _co.technologies; _ck(_v, 62, 0, currVal_43); var currVal_51 = _co.selectYears; _ck(_v, 69, 0, currVal_51); var currVal_52 = "all"; _ck(_v, 73, 0, currVal_52); var currVal_53 = "all"; _ck(_v, 74, 0, currVal_53); var currVal_54 = _co.years; _ck(_v, 77, 0, currVal_54); var currVal_55 = _co.pages; _ck(_v, 80, 0, currVal_55); }, function (_ck, _v) { var currVal_0 = i1.ɵnov(_v, 11).ngClassUntouched; var currVal_1 = i1.ɵnov(_v, 11).ngClassTouched; var currVal_2 = i1.ɵnov(_v, 11).ngClassPristine; var currVal_3 = i1.ɵnov(_v, 11).ngClassDirty; var currVal_4 = i1.ɵnov(_v, 11).ngClassValid; var currVal_5 = i1.ɵnov(_v, 11).ngClassInvalid; var currVal_6 = i1.ɵnov(_v, 11).ngClassPending; _ck(_v, 6, 0, currVal_0, currVal_1, currVal_2, currVal_3, currVal_4, currVal_5, currVal_6); var currVal_11 = i1.ɵnov(_v, 26).ngClassUntouched; var currVal_12 = i1.ɵnov(_v, 26).ngClassTouched; var currVal_13 = i1.ɵnov(_v, 26).ngClassPristine; var currVal_14 = i1.ɵnov(_v, 26).ngClassDirty; var currVal_15 = i1.ɵnov(_v, 26).ngClassValid; var currVal_16 = i1.ɵnov(_v, 26).ngClassInvalid; var currVal_17 = i1.ɵnov(_v, 26).ngClassPending; _ck(_v, 21, 0, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16, currVal_17); var currVal_22 = i1.ɵnov(_v, 41).ngClassUntouched; var currVal_23 = i1.ɵnov(_v, 41).ngClassTouched; var currVal_24 = i1.ɵnov(_v, 41).ngClassPristine; var currVal_25 = i1.ɵnov(_v, 41).ngClassDirty; var currVal_26 = i1.ɵnov(_v, 41).ngClassValid; var currVal_27 = i1.ɵnov(_v, 41).ngClassInvalid; var currVal_28 = i1.ɵnov(_v, 41).ngClassPending; _ck(_v, 36, 0, currVal_22, currVal_23, currVal_24, currVal_25, currVal_26, currVal_27, currVal_28); var currVal_33 = i1.ɵnov(_v, 56).ngClassUntouched; var currVal_34 = i1.ɵnov(_v, 56).ngClassTouched; var currVal_35 = i1.ɵnov(_v, 56).ngClassPristine; var currVal_36 = i1.ɵnov(_v, 56).ngClassDirty; var currVal_37 = i1.ɵnov(_v, 56).ngClassValid; var currVal_38 = i1.ɵnov(_v, 56).ngClassInvalid; var currVal_39 = i1.ɵnov(_v, 56).ngClassPending; _ck(_v, 51, 0, currVal_33, currVal_34, currVal_35, currVal_36, currVal_37, currVal_38, currVal_39); var currVal_44 = i1.ɵnov(_v, 71).ngClassUntouched; var currVal_45 = i1.ɵnov(_v, 71).ngClassTouched; var currVal_46 = i1.ɵnov(_v, 71).ngClassPristine; var currVal_47 = i1.ɵnov(_v, 71).ngClassDirty; var currVal_48 = i1.ɵnov(_v, 71).ngClassValid; var currVal_49 = i1.ɵnov(_v, 71).ngClassInvalid; var currVal_50 = i1.ɵnov(_v, 71).ngClassPending; _ck(_v, 66, 0, currVal_44, currVal_45, currVal_46, currVal_47, currVal_48, currVal_49, currVal_50); }); }
+    } return ad; }, null, null)), i1.ɵdid(67, 16384, null, 0, i2.SelectControlValueAccessor, [i1.Renderer2, i1.ElementRef], null, null), i1.ɵprd(1024, null, i2.NG_VALUE_ACCESSOR, function (p0_0) { return [p0_0]; }, [i2.SelectControlValueAccessor]), i1.ɵdid(69, 540672, null, 0, i2.FormControlDirective, [[8, null], [8, null], [6, i2.NG_VALUE_ACCESSOR], [2, i2.ɵangular_packages_forms_forms_j]], { form: [0, "form"] }, null), i1.ɵprd(2048, null, i2.NgControl, null, [i2.FormControlDirective]), i1.ɵdid(71, 16384, null, 0, i2.NgControlStatus, [[4, i2.NgControl]], null, null), (_l()(), i1.ɵeld(72, 0, null, null, 3, "option", [["value", "all"]], null, null, null, null, null)), i1.ɵdid(73, 147456, null, 0, i2.NgSelectOption, [i1.ElementRef, i1.Renderer2, [2, i2.SelectControlValueAccessor]], { value: [0, "value"] }, null), i1.ɵdid(74, 147456, null, 0, i2.ɵangular_packages_forms_forms_r, [i1.ElementRef, i1.Renderer2, [8, null]], { value: [0, "value"] }, null), (_l()(), i1.ɵted(-1, null, ["All"])), (_l()(), i1.ɵand(16777216, null, null, 1, null, View_HomeComponent_5)), i1.ɵdid(77, 278528, null, 0, i4.NgForOf, [i1.ViewContainerRef, i1.TemplateRef, i1.IterableDiffers], { ngForOf: [0, "ngForOf"] }, null), (_l()(), i1.ɵeld(78, 0, null, null, 8, "div", [["class", "form-input"]], null, null, null, null, null)), (_l()(), i1.ɵeld(79, 0, null, null, 1, "label", [["for", "search"]], null, null, null, null, null)), (_l()(), i1.ɵted(-1, null, ["Search"])), (_l()(), i1.ɵeld(81, 0, null, null, 5, "input", [["id", "search"], ["name", "search"]], [[2, "ng-untouched", null], [2, "ng-touched", null], [2, "ng-pristine", null], [2, "ng-dirty", null], [2, "ng-valid", null], [2, "ng-invalid", null], [2, "ng-pending", null]], [[null, "input"], [null, "blur"], [null, "compositionstart"], [null, "compositionend"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("input" === en)) {
+        var pd_0 = (i1.ɵnov(_v, 82)._handleInput($event.target.value) !== false);
+        ad = (pd_0 && ad);
+    } if (("blur" === en)) {
+        var pd_1 = (i1.ɵnov(_v, 82).onTouched() !== false);
+        ad = (pd_1 && ad);
+    } if (("compositionstart" === en)) {
+        var pd_2 = (i1.ɵnov(_v, 82)._compositionStart() !== false);
+        ad = (pd_2 && ad);
+    } if (("compositionend" === en)) {
+        var pd_3 = (i1.ɵnov(_v, 82)._compositionEnd($event.target.value) !== false);
+        ad = (pd_3 && ad);
+    } if (("input" === en)) {
+        var pd_4 = (_co.onChange("search", $event.target.value) !== false);
+        ad = (pd_4 && ad);
+    } return ad; }, null, null)), i1.ɵdid(82, 16384, null, 0, i2.DefaultValueAccessor, [i1.Renderer2, i1.ElementRef, [2, i2.COMPOSITION_BUFFER_MODE]], null, null), i1.ɵprd(1024, null, i2.NG_VALUE_ACCESSOR, function (p0_0) { return [p0_0]; }, [i2.DefaultValueAccessor]), i1.ɵdid(84, 540672, null, 0, i2.FormControlDirective, [[8, null], [8, null], [6, i2.NG_VALUE_ACCESSOR], [2, i2.ɵangular_packages_forms_forms_j]], { form: [0, "form"] }, null), i1.ɵprd(2048, null, i2.NgControl, null, [i2.FormControlDirective]), i1.ɵdid(86, 16384, null, 0, i2.NgControlStatus, [[4, i2.NgControl]], null, null), (_l()(), i1.ɵeld(87, 0, null, null, 2, "div", [["class", "grid"]], null, null, null, null, null)), (_l()(), i1.ɵand(16777216, null, null, 1, null, View_HomeComponent_6)), i1.ɵdid(89, 278528, null, 0, i4.NgForOf, [i1.ViewContainerRef, i1.TemplateRef, i1.IterableDiffers], { ngForOf: [0, "ngForOf"] }, null), (_l()(), i1.ɵeld(90, 0, null, null, 3, "div", [["class", "controls"]], null, null, null, null, null)), (_l()(), i1.ɵeld(91, 0, null, null, 1, "button", [["class", "generate"]], null, [[null, "click"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("click" === en)) {
+        var pd_0 = (_co.generate(_co.pages) !== false);
+        ad = (pd_0 && ad);
+    } return ad; }, null, null)), (_l()(), i1.ɵted(92, null, ["Generate ", " Slide", ""])), (_l()(), i1.ɵeld(93, 0, null, null, 0, "div", [["class", "message"]], [[8, "innerHTML", 1]], null, null, null, null))], function (_ck, _v) { var _co = _v.component; var currVal_7 = _co.selectActivities; _ck(_v, 9, 0, currVal_7); var currVal_8 = "all"; _ck(_v, 13, 0, currVal_8); var currVal_9 = "all"; _ck(_v, 14, 0, currVal_9); var currVal_10 = _co.activities; _ck(_v, 17, 0, currVal_10); var currVal_18 = _co.selectIndustries; _ck(_v, 24, 0, currVal_18); var currVal_19 = "all"; _ck(_v, 28, 0, currVal_19); var currVal_20 = "all"; _ck(_v, 29, 0, currVal_20); var currVal_21 = _co.industries; _ck(_v, 32, 0, currVal_21); var currVal_29 = _co.selectLocations; _ck(_v, 39, 0, currVal_29); var currVal_30 = "all"; _ck(_v, 43, 0, currVal_30); var currVal_31 = "all"; _ck(_v, 44, 0, currVal_31); var currVal_32 = _co.locations; _ck(_v, 47, 0, currVal_32); var currVal_40 = _co.selectTechnologies; _ck(_v, 54, 0, currVal_40); var currVal_41 = "all"; _ck(_v, 58, 0, currVal_41); var currVal_42 = "all"; _ck(_v, 59, 0, currVal_42); var currVal_43 = _co.technologies; _ck(_v, 62, 0, currVal_43); var currVal_51 = _co.selectYears; _ck(_v, 69, 0, currVal_51); var currVal_52 = "all"; _ck(_v, 73, 0, currVal_52); var currVal_53 = "all"; _ck(_v, 74, 0, currVal_53); var currVal_54 = _co.years; _ck(_v, 77, 0, currVal_54); var currVal_62 = _co.inputSearch; _ck(_v, 84, 0, currVal_62); var currVal_63 = _co.pages; _ck(_v, 89, 0, currVal_63); }, function (_ck, _v) { var _co = _v.component; var currVal_0 = i1.ɵnov(_v, 11).ngClassUntouched; var currVal_1 = i1.ɵnov(_v, 11).ngClassTouched; var currVal_2 = i1.ɵnov(_v, 11).ngClassPristine; var currVal_3 = i1.ɵnov(_v, 11).ngClassDirty; var currVal_4 = i1.ɵnov(_v, 11).ngClassValid; var currVal_5 = i1.ɵnov(_v, 11).ngClassInvalid; var currVal_6 = i1.ɵnov(_v, 11).ngClassPending; _ck(_v, 6, 0, currVal_0, currVal_1, currVal_2, currVal_3, currVal_4, currVal_5, currVal_6); var currVal_11 = i1.ɵnov(_v, 26).ngClassUntouched; var currVal_12 = i1.ɵnov(_v, 26).ngClassTouched; var currVal_13 = i1.ɵnov(_v, 26).ngClassPristine; var currVal_14 = i1.ɵnov(_v, 26).ngClassDirty; var currVal_15 = i1.ɵnov(_v, 26).ngClassValid; var currVal_16 = i1.ɵnov(_v, 26).ngClassInvalid; var currVal_17 = i1.ɵnov(_v, 26).ngClassPending; _ck(_v, 21, 0, currVal_11, currVal_12, currVal_13, currVal_14, currVal_15, currVal_16, currVal_17); var currVal_22 = i1.ɵnov(_v, 41).ngClassUntouched; var currVal_23 = i1.ɵnov(_v, 41).ngClassTouched; var currVal_24 = i1.ɵnov(_v, 41).ngClassPristine; var currVal_25 = i1.ɵnov(_v, 41).ngClassDirty; var currVal_26 = i1.ɵnov(_v, 41).ngClassValid; var currVal_27 = i1.ɵnov(_v, 41).ngClassInvalid; var currVal_28 = i1.ɵnov(_v, 41).ngClassPending; _ck(_v, 36, 0, currVal_22, currVal_23, currVal_24, currVal_25, currVal_26, currVal_27, currVal_28); var currVal_33 = i1.ɵnov(_v, 56).ngClassUntouched; var currVal_34 = i1.ɵnov(_v, 56).ngClassTouched; var currVal_35 = i1.ɵnov(_v, 56).ngClassPristine; var currVal_36 = i1.ɵnov(_v, 56).ngClassDirty; var currVal_37 = i1.ɵnov(_v, 56).ngClassValid; var currVal_38 = i1.ɵnov(_v, 56).ngClassInvalid; var currVal_39 = i1.ɵnov(_v, 56).ngClassPending; _ck(_v, 51, 0, currVal_33, currVal_34, currVal_35, currVal_36, currVal_37, currVal_38, currVal_39); var currVal_44 = i1.ɵnov(_v, 71).ngClassUntouched; var currVal_45 = i1.ɵnov(_v, 71).ngClassTouched; var currVal_46 = i1.ɵnov(_v, 71).ngClassPristine; var currVal_47 = i1.ɵnov(_v, 71).ngClassDirty; var currVal_48 = i1.ɵnov(_v, 71).ngClassValid; var currVal_49 = i1.ɵnov(_v, 71).ngClassInvalid; var currVal_50 = i1.ɵnov(_v, 71).ngClassPending; _ck(_v, 66, 0, currVal_44, currVal_45, currVal_46, currVal_47, currVal_48, currVal_49, currVal_50); var currVal_55 = i1.ɵnov(_v, 86).ngClassUntouched; var currVal_56 = i1.ɵnov(_v, 86).ngClassTouched; var currVal_57 = i1.ɵnov(_v, 86).ngClassPristine; var currVal_58 = i1.ɵnov(_v, 86).ngClassDirty; var currVal_59 = i1.ɵnov(_v, 86).ngClassValid; var currVal_60 = i1.ɵnov(_v, 86).ngClassInvalid; var currVal_61 = i1.ɵnov(_v, 86).ngClassPending; _ck(_v, 81, 0, currVal_55, currVal_56, currVal_57, currVal_58, currVal_59, currVal_60, currVal_61); var currVal_64 = _co.pages.length; var currVal_65 = ((_co.pages.length == 1) ? "" : "s"); _ck(_v, 92, 0, currVal_64, currVal_65); var currVal_66 = _co.message; _ck(_v, 93, 0, currVal_66); }); }
 exports.View_HomeComponent_0 = View_HomeComponent_0;
 function View_HomeComponent_Host_0(_l) { return i1.ɵvid(0, [(_l()(), i1.ɵeld(0, 0, null, null, 1, "app-home", [], null, null, null, View_HomeComponent_0, RenderType_HomeComponent)), i1.ɵdid(1, 114688, null, 0, i6.HomeComponent, [i7.ApiService, i3.ActivatedRoute, i3.Router, i5.SlugifyPipe], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 exports.View_HomeComponent_Host_0 = View_HomeComponent_Host_0;
@@ -513,7 +523,7 @@ exports.HomeComponentNgFactory = HomeComponentNgFactory;
  * tslint:disable
  */ 
 Object.defineProperty(exports, "__esModule", { value: true });
-var styles = [".filters[_ngcontent-%COMP%] {\n  margin-bottom: 1rem; }\n  .filters[_ngcontent-%COMP%]   .form-input[_ngcontent-%COMP%] {\n    margin: 0 1rem 1rem 0; }\n  .filters[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n    display: block; }\n  .filters[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n    width: 100%; }\n  .page[_ngcontent-%COMP%] {\n  margin-right: 1rem; }\n  .page[_ngcontent-%COMP%]:last-child {\n    margin-right: 0; }\n  .page[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n    max-width: 100%; }\n  @media (min-width: 30em) {\n  .filters[_ngcontent-%COMP%] {\n    display: flex; } }"];
+var styles = [".filters[_ngcontent-%COMP%] {\n  margin-bottom: 1rem; }\n  .filters[_ngcontent-%COMP%]   .form-input[_ngcontent-%COMP%] {\n    margin: 0 1rem 1rem 0; }\n  .filters[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n    display: block; }\n  .filters[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n    width: 100%; }\n  .page[_ngcontent-%COMP%] {\n  margin-right: 1rem; }\n  .page[_ngcontent-%COMP%]:last-child {\n    margin-right: 0; }\n  .page[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n    max-width: 100%; }\n  @media (min-width: 30em) {\n  .filters[_ngcontent-%COMP%] {\n    display: flex; } }\n  .controls[_ngcontent-%COMP%]   .message[_ngcontent-%COMP%] {\n  padding: 1rem;\n  background-color: #efefef;\n  margin-top: 1rem; }"];
 exports.styles = styles;
 
 
@@ -533,6 +543,7 @@ var router_1 = __webpack_require__(/*! @angular/router */ "@angular/router");
 var core_1 = __webpack_require__(/*! @angular/core */ "@angular/core");
 var forms_1 = __webpack_require__(/*! @angular/forms */ "@angular/forms");
 var slugify_pipe_1 = __webpack_require__(/*! ../shared/slugify.pipe */ "./src/app/shared/slugify.pipe.ts");
+var rxjs_1 = __webpack_require__(/*! rxjs */ "rxjs");
 var environment_1 = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 var api_service_1 = __webpack_require__(/*! ../shared/api.service */ "./src/app/shared/api.service.ts");
 var HomeComponent = /** @class */ (function () {
@@ -551,6 +562,7 @@ var HomeComponent = /** @class */ (function () {
             _this.selectLocations = new forms_1.FormControl(params['locations'] || 'all');
             _this.selectTechnologies = new forms_1.FormControl(params['technologies'] || 'all');
             _this.selectYears = new forms_1.FormControl(params['years'] || 'all');
+            _this.inputSearch = new forms_1.FormControl(params['search'] || '');
             _this.api.get("" + environment_1.environment.API_URL + environment_1.environment.SHEET_ID + "?includeGridData=true", 'routes').subscribe(function (pages) {
                 _this.pages = pages.filter(function (page) {
                     // TODO make this more DRY
@@ -604,6 +616,9 @@ var HomeComponent = /** @class */ (function () {
                             return false;
                         }
                     }
+                    if (_this.inputSearch.value !== '') {
+                        return page.name.toLowerCase().indexOf(_this.inputSearch.value.toLowerCase()) !== -1;
+                    }
                     return page;
                 });
             });
@@ -615,6 +630,65 @@ var HomeComponent = /** @class */ (function () {
     };
     HomeComponent.prototype.login = function () {
         window['gapi'].auth2.getAuthInstance().signIn();
+    };
+    HomeComponent.prototype.generate = function (pages) {
+        var _this = this;
+        console.log('generate', pages);
+        var name = 'Case Studies: ' + new Date().toTimeString();
+        this.message = "Copying " + environment_1.environment.SLIDE_ID + " to " + name + "<br/>";
+        this.copyFile(environment_1.environment.SLIDE_ID, name).subscribe(function (copyData) {
+            _this.message += "Loading " + copyData.id + "<br/>";
+            _this.getFile(copyData.id).subscribe(function (fileData) {
+                _this.message += "Creating " + pages.length + " slides<br/>";
+                var observables = [];
+                pages.forEach(function (page) {
+                    observables.push(_this.updateSlide(copyData.id, fileData.slides[0].objectId, page));
+                });
+                rxjs_1.forkJoin(observables).subscribe(function (observableData) {
+                    _this.message += "Complete! <a href=\"https://docs.google.com/presentation/d/" + copyData.id + "/edit\" target=\"_blank\">          https://docs.google.com/presentation/d/" + copyData.id + "/edit</a><br/>";
+                    console.log('generate complete', observableData);
+                });
+            });
+        });
+    };
+    HomeComponent.prototype.copyFile = function (id, name) {
+        console.log('copyFile', id, name);
+        return this.api.post("" + environment_1.environment.API_DRIVE + id + "/copy", { 'name': name }, 'slide');
+    };
+    HomeComponent.prototype.getFile = function (id) {
+        console.log('getFile', id);
+        return this.api.get("" + environment_1.environment.API_SLIDES_URL + id, 'slide');
+    };
+    HomeComponent.prototype.updateSlide = function (id, objectId, item) {
+        console.log('updateSlide', id, item);
+        return this.api.post("" + environment_1.environment.API_SLIDES_URL + id + ":batchUpdate", {
+            requests: [
+                {
+                    duplicateObject: {
+                        objectId: objectId
+                    }
+                },
+                {
+                    replaceAllText: {
+                        replaceText: item.name,
+                        containsText: {
+                            text: '{{ name }}',
+                            matchCase: true
+                        }
+                    }
+                },
+                {
+                    replaceAllShapesWithImage: {
+                        imageUrl: item.images[0],
+                        replaceMethod: 'CENTER_INSIDE',
+                        containsText: {
+                            text: '{{ image }}',
+                            matchCase: true
+                        }
+                    }
+                }
+            ]
+        }, 'slide');
     };
     return HomeComponent;
 }());
@@ -1010,30 +1084,36 @@ var ApiService = /** @class */ (function () {
                 url = "./json/" + id + ".json";
             }
             return this.http.get(url).pipe(operators_1.map(function (data) {
-                var items = [];
+                var items;
                 if (environment_1.environment.production && common_1.isPlatformBrowser(_this.platformId)) {
                     items = data;
                 }
                 else {
-                    var rows_1 = data['sheets'][0]['data'][0]['rowData'];
-                    rows_1.forEach(function (row, index) {
-                        if (index > 0) {
-                            var newRow_1 = {};
-                            row['values'].forEach(function (rowItem, rowIndex) {
-                                var rowKey = rows_1[0]['values'][rowIndex].formattedValue;
-                                var rowValue = rowItem.formattedValue;
-                                if (rowKey && rowValue) {
-                                    if (rowKey.charAt(rowKey.length - 1) === 's') {
-                                        rowValue = rowItem.formattedValue.split(', ');
+                    items = [];
+                    if (data['sheets']) {
+                        var rows_1 = data['sheets'][0]['data'][0]['rowData'];
+                        rows_1.forEach(function (row, index) {
+                            if (index > 0) {
+                                var newRow_1 = {};
+                                row['values'].forEach(function (rowItem, rowIndex) {
+                                    var rowKey = rows_1[0]['values'][rowIndex].formattedValue;
+                                    var rowValue = rowItem.formattedValue;
+                                    if (rowKey && rowValue) {
+                                        if (rowKey.charAt(rowKey.length - 1) === 's') {
+                                            rowValue = rowItem.formattedValue.split('\n');
+                                        }
+                                        newRow_1[rowKey] = rowValue;
                                     }
-                                    newRow_1[rowKey] = rowValue;
+                                });
+                                if (newRow_1['name']) {
+                                    items.push(newRow_1);
                                 }
-                            });
-                            if (newRow_1['name']) {
-                                items.push(newRow_1);
                             }
-                        }
-                    });
+                        });
+                    }
+                    else {
+                        items = data;
+                    }
                 }
                 console.log('items', items);
                 _this.transferState.set(key, items);
@@ -1042,28 +1122,9 @@ var ApiService = /** @class */ (function () {
         }
     };
     ApiService.prototype.post = function (url, data, id) {
-        var _this = this;
-        var key = platform_browser_1.makeStateKey(id);
-        if (this.transferState.hasKey(key)) {
-            var item = this.transferState.get(key, null);
-            return rxjs_1.of(item);
-        }
-        else {
-            if (environment_1.environment.production && common_1.isPlatformBrowser(this.platformId)) {
-                url = "./json/" + id + ".json";
-                return this.http.get(url, data).pipe(operators_1.map(function (items) {
-                    _this.transferState.set(key, items);
-                    return items;
-                }));
-            }
-            else {
-                // console.log('post', url);
-                return this.http.post(url, data).pipe(operators_1.map(function (items) {
-                    _this.transferState.set(key, items);
-                    return items;
-                }));
-            }
-        }
+        return this.http.post(url, data).pipe(operators_1.map(function (items) {
+            return items;
+        }));
     };
     ApiService.ngInjectableDef = i0.defineInjectable({ factory: function ApiService_Factory() { return new ApiService(i0.inject(i1.HttpClient), i0.inject(i0.PLATFORM_ID), i0.inject(i2.TransferState)); }, token: ApiService, providedIn: "root" });
     return ApiService;
@@ -1216,12 +1277,18 @@ exports.ServerTransferStateJsonModule = ServerTransferStateJsonModule;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.environment = {
+    API_DRIVE: 'https://www.googleapis.com/drive/v3/files/',
+    API_SLIDES_URL: 'https://slides.googleapis.com/v1/presentations/',
     API_URL: 'https://sheets.googleapis.com/v4/spreadsheets/',
     CLIENT_ID: '580922953631-sn0rqibr4kkjgoi4un1t798goda8uggr.apps.googleusercontent.com',
-    SCOPE: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    SCOPE: 'https://www.googleapis.com/auth/spreadsheets.readonly \
+          https://www.googleapis.com/auth/presentations \
+          https://www.googleapis.com/auth/drive.readonly \
+          https://www.googleapis.com/auth/drive.file',
     SHEET_ID: '1PGFoY15Wi0RFxjycqF_oXYKdjH8IM5k3_IxJLFI90aU',
-    TOKEN: 'ya29.GlxHBrl5SklUbX5vYfCNIY71wptvROayo_B76ggT3wMSF6anQbhe8EdbpLdxI9A3Owf5WWIvOONxnqdkq8bNsIJKR1mW0_u9SZHqzfuC89VfBFK_k86IAm1g422ZEw',
-    production: true,
+    SLIDE_ID: '1MO9cDahRyaSRF7zsn84iWBC4evbIb809VhGFX_VdO_M',
+    TOKEN: 'ya29.Gl12BolsFJu5j1nW2kMweMadEtxsMrT7ZWzgex4KG2euasMKT4_UOQxivlPCBXWYKBYdECb9stCJeSNPqrN3ASn5LWQuvGJ-teW1kQw__3vDsmB2mfZ18eMivMk_c0E',
+    production: true
 };
 
 
