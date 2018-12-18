@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   selectLocations: FormControl;
   selectTechnologies: FormControl;
   selectYears: FormControl;
+  inputSearch: FormControl;
 
   activities: Array<string>;
   industries: Array<string>;
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit {
       this.selectLocations = new FormControl(params['locations'] || 'all');
       this.selectTechnologies = new FormControl(params['technologies'] || 'all');
       this.selectYears = new FormControl(params['years'] || 'all');
+      this.inputSearch = new FormControl(params['search'] || '');
       this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(pages => {
         this.pages = pages.filter((page) => {
           // TODO make this more DRY
@@ -96,6 +98,9 @@ export class HomeComponent implements OnInit {
             if (results.length === 0) {
               return false;
             }
+          }
+          if (this.inputSearch.value !== '') {
+            return page.name.toLowerCase().indexOf(this.inputSearch.value.toLowerCase()) !== -1;
           }
           return page;
         });

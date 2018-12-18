@@ -44,7 +44,7 @@ export class ApiService {
                     let rowValue = rowItem.formattedValue;
                     if (rowKey && rowValue) {
                       if (rowKey.charAt(rowKey.length - 1) === 's') {
-                        rowValue = rowItem.formattedValue.split(', ');
+                        rowValue = rowItem.formattedValue.split('\n');
                       }
                       newRow[rowKey] = rowValue;
                     }

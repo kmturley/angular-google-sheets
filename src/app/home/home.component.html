@@ -35,6 +35,10 @@
         <option *ngFor="let year of years" [value]="year | slugify">{{ year }}</option>
       </select>
     </div>
+    <div class="form-input">
+      <label for="search">Search</label>
+      <input [formControl]="inputSearch" (input)="onChange('search', $event.target.value)" name="search" id="search" />
+    </div>
   </div>
   <div class="grid">
     <a class="col page" *ngFor="let page of pages" routerLink="{{ page.name | slugify }}">
