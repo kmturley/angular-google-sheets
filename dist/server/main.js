@@ -165,6 +165,16 @@ var AppRoutingService = /** @class */ (function () {
         this.slugifyPipe = slugifyPipe;
         this.routes = [];
     }
+    AppRoutingService.prototype.setupRoutes = function () {
+        this.routes.push({
+            pathMatch: 'full',
+            path: '',
+            loadChildren: './home/home.module#HomeModule',
+            data: {
+                name: 'Home'
+            }
+        });
+    };
     AppRoutingService.prototype.getRoutes = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
@@ -181,14 +191,6 @@ var AppRoutingService = /** @class */ (function () {
     AppRoutingService.prototype.getData = function (resolve) {
         var _this = this;
         return this.api.get("" + environment_1.environment.API_URL + environment_1.environment.SHEET_ID + "?includeGridData=true", 'routes').subscribe(function (routes) {
-            _this.routes.push({
-                pathMatch: 'full',
-                path: '',
-                loadChildren: './home/home.module#HomeModule',
-                data: {
-                    name: 'Home'
-                }
-            });
             routes.forEach(function (route) {
                 _this.routes.push({
                     pathMatch: 'full',
@@ -320,6 +322,7 @@ var common_1 = __webpack_require__(/*! @angular/common */ "@angular/common");
 var environment_1 = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
 var app_routing_service_1 = __webpack_require__(/*! ./app-routing.service */ "./src/app/app-routing.service.ts");
 function init(routeService, platformId) {
+    routeService.setupRoutes();
     if (environment_1.environment.production && common_1.isPlatformBrowser(platformId)) {
         return function () { return true; };
     }

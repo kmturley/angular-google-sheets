@@ -17,6 +17,7 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { NavigationComponent } from './navigation/navigation.component';
 
 export function init(routeService: AppRoutingService, platformId: string) {
+  routeService.setupRoutes();
   if (environment.production && isPlatformBrowser(platformId)) {
     return () => true;
   } else {

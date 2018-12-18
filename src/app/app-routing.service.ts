@@ -17,6 +17,17 @@ export class AppRoutingService {
     private slugifyPipe: SlugifyPipe
   ) { }
 
+  setupRoutes() {
+    this.routes.push({
+      pathMatch: 'full',
+      path: '',
+      loadChildren: './home/home.module#HomeModule',
+      data: {
+        name: 'Home'
+      }
+    });
+  }
+
   getRoutes() {
     return new Promise((resolve, reject) => {
       this.loadGapi().subscribe((a) => {
@@ -32,14 +43,6 @@ export class AppRoutingService {
 
   getData(resolve) {
     return this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(routes => {
-      this.routes.push({
-        pathMatch: 'full',
-        path: '',
-        loadChildren: './home/home.module#HomeModule',
-        data: {
-          name: 'Home'
-        }
-      });
       routes.forEach((route) => {
         this.routes.push({
           pathMatch: 'full',
