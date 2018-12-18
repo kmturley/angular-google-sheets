@@ -35,6 +35,10 @@
         <option *ngFor="let year of years" [value]="year | slugify">{{ year }}</option>
       </select>
     </div>
+    <div class="form-input">
+      <label for="search">Search</label>
+      <input [formControl]="inputSearch" (input)="onChange('search', $event.target.value)" name="search" id="search" />
+    </div>
   </div>
   <div class="grid">
     <a class="col page" *ngFor="let page of pages" routerLink="{{ page.name | slugify }}">
@@ -42,7 +46,9 @@
       <h3>{{ page.name }}</h3>
     </a>
   </div>
+  <div class="controls">
+    <button class="generate" (click)="generate(pages)">Generate {{ pages.length }} Slide{{ pages.length == 1 ? '' : 's' }}</button>
+    <div class="message" [innerHTML]="message"></div>
+    <!-- <button class="login" (click)="login()">Login to Google</button> -->
+  </div>
 </div>
-<!-- <div class="section">
-  <button (click)="login()">Login</button>
-</div> -->

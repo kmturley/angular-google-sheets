@@ -2,6 +2,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SlugifyPipe } from '../shared/slugify.pipe';
+import { forkJoin } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ApiService } from '../shared/api.service';
@@ -13,6 +14,7 @@ import { Page } from '../page/page.component';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
+  message: String;
   pages: Array<Page>;
   params = { queryParams: {} };
 
@@ -21,6 +23,7 @@ export class HomeComponent implements OnInit {
   selectLocations: FormControl;
   selectTechnologies: FormControl;
   selectYears: FormControl;
+  inputSearch: FormControl;
 
   activities: Array<string>;
   industries: Array<string>;
@@ -42,6 +45,7 @@ export class HomeComponent implements OnInit {
       this.selectLocations = new FormControl(params['locations'] || 'all');
       this.selectTechnologies = new FormControl(params['technologies'] || 'all');
       this.selectYears = new FormControl(params['years'] || 'all');
+      this.inputSearch = new FormControl(params['search'] || '');
       this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(pages => {
         this.pages = pages.filter((page) => {
           // TODO make this more DRY
@@ -95,6 +99,9 @@ export class HomeComponent implements OnInit {
               return false;
             }
           }
+          if (this.inputSearch.value !== '') {
+            return page.name.toLowerCase().indexOf(this.inputSearch.value.toLowerCase()) !== -1;
+          }
           return page;
         });
       });
@@ -109,4 +116,88 @@ export class HomeComponent implements OnInit {
   login() {
     window['gapi'].auth2.getAuthInstance().signIn();
   }
+
+  generate(pages) {
+    console.log('generate', pages);
+    const name = 'Case Studies: ' + new Date().toTimeString();
+    this.message = `Copying ${environment.SLIDE_ID} to ${name}<br/>`;
+    this.copyFile(environment.SLIDE_ID, name).subscribe((copyData) => {
+      this.message += `Loading ${copyData.id}<br/>`;
+      this.getFile(copyData.id).subscribe((fileData) => {
+        this.message += `Creating ${pages.length} slides<br/>`;
+        const observables = [];
+        pages.forEach((page) => {
+          observables.push(this.updateSlide(copyData.id, fileData.slides[0].objectId, page));
+        });
+        forkJoin(observables).subscribe((observableData) => {
+          this.message += `Complete! <a href="https://docs.google.com/presentation/d/${copyData.id}/edit" target="_blank">\
+          https://docs.google.com/presentation/d/${copyData.id}/edit</a><br/>`;
+          console.log('generate complete', observableData);
+        });
+      });
+    });
+  }
+
+  copyFile(id, name) {
+    console.log('copyFile', id, name);
+    return this.api.post(`${environment.API_DRIVE}${id}/copy`, { 'name': name }, 'slide');
+  }
+
+  getFile(id) {
+    console.log('getFile', id);
+    return this.api.get(`${environment.API_SLIDES_URL}${id}`, 'slide');
+  }
+
+  updateSlide(id, objectId, item) {
+    console.log('updateSlide', id, item);
+    return this.api.post(`${environment.API_SLIDES_URL}${id}:batchUpdate`, {
+      requests: [
+        {
+          duplicateObject: {
+            objectId: objectId
+          }
+        },
+        {
+          replaceAllText: {
+            replaceText: item.name,
+            containsText: {
+              text: '{{ name }}',
+              matchCase: true
+            }
+          }
+        },
+        {
+          replaceAllShapesWithImage: {
+            imageUrl: item.images[0],
+            replaceMethod: 'CENTER_INSIDE',
+            containsText: {
+              text: '{{ image }}',
+              matchCase: true
+            }
+          }
+        }
+      ]
+    }, 'slide');
+  }
+
+  // update() {
+  //   this.api.get(`${environment.API_SLIDES_URL}${environment.SLIDE_ID}`, 'slides').subscribe(data => {
+  //     this.api.post(`${environment.API_SLIDES_URL}${environment.SLIDE_ID}:batchUpdate`, {
+  //         'requests': [
+  //           {
+  //             'insertText' : {
+  //               'objectId': data.slides[0].pageElements[0].objectId,
+  //               'text': 'Dynamic! ' + new Date().getTime(),
+  //               'insertionIndex': 0
+  //             }
+  //           }
+  //         ],
+  //         'writeControl': {
+  //           'requiredRevisionId': data.revisionId
+  //         }
+  //       }, 'slides').subscribe(postData => {
+  //       console.log('generate post', postData);
+  //     });
+  //   });
+  // }
 }

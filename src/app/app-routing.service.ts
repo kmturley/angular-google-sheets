@@ -19,19 +19,14 @@ export class AppRoutingService {
 
   getRoutes() {
     return new Promise((resolve, reject) => {
-      if (environment.production === true) {
-        this.getData(resolve);
-      } else {
-        this.loadGapi().subscribe((a) => {
-          this.loadGapiAuth().subscribe((user: Object) => {
-            console.log('user', user);
-            if (isPlatformBrowser(this.platformId)) {
-              localStorage.setItem('token', user['getAuthResponse']().access_token);
-            }
-            this.getData(resolve);
-          });
+      this.loadGapi().subscribe((a) => {
+        this.loadGapiAuth().subscribe((user: Object) => {
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem('token', user['getAuthResponse']().access_token);
+          }
+          this.getData(resolve);
         });
-      }
+      });
     });
   }
 
@@ -81,7 +76,7 @@ export class AppRoutingService {
   private loadGapiAuth(): Observable<Object> {
     return Observable.create((observer: Observer<Object>) => {
       if (isPlatformBrowser(this.platformId)) {
-        window['gapi'].load('auth2', () => {
+        window['gapi'].load('client:auth2', () => {
           const auth2 = window['gapi'].auth2.init({
             client_id: environment.CLIENT_ID,
             scope: environment.SCOPE
@@ -90,9 +85,7 @@ export class AppRoutingService {
             observer.next(user);
             observer.complete();
           });
-          if (auth2.isSignedIn.get() === true) {
-            auth2.signIn();
-          }
+          auth2.signIn();
         });
       } else {
         observer.next({ name: 'test' });

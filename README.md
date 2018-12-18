@@ -24,6 +24,10 @@ Create an file at src/environments/environment.ts containing your google API det
         production: false,
     };
 
+Create a Google spreadsheet with named columns. You can duplicate my template here:
+
+    https://docs.google.com/spreadsheets/d/1PGFoY15Wi0RFxjycqF_oXYKdjH8IM5k3_IxJLFI90aU/edit#gid=0
+
 
 ## Usage
 
@@ -48,7 +52,7 @@ Then run the command to build static:
 
 Or to build with custom base url:
 
-    ng build --prod --base-href https://kmturley.github.io/angular-google-sheets/dist/browser/
+    ng build --prod --base-href https://kmturley.co.uk/angular-google-sheets/dist/browser/
     ng run angular-google-sheets:server:production
     npm run compile:server && npm run generate:prerender
 
