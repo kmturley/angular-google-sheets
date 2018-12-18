@@ -1,6 +1,7 @@
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { isPlatformBrowser } from '@angular/common';
 import { SlugifyPipe } from '../shared/slugify.pipe';
 import { forkJoin } from 'rxjs';
 
@@ -14,6 +15,7 @@ import { Page } from '../page/page.component';
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
+  dev = !environment.production;
   message: String;
   pages: Array<Page>;
   params = { queryParams: {} };
