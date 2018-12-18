@@ -46,7 +46,7 @@
       <h3>{{ page.name }}</h3>
     </a>
   </div>
-  <div class="controls">
+  <div class="controls" *ngIf="dev">
     <button class="generate" (click)="generate(pages)">Generate {{ pages.length }} Slide{{ pages.length == 1 ? '' : 's' }}</button>
     <div class="message" [innerHTML]="message"></div>
     <!-- <button class="login" (click)="login()">Login to Google</button> -->
