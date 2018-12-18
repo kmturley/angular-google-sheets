@@ -17,7 +17,7 @@ import { NavigationComponent } from './navigation/navigation.component';
 
 export function init(routeService: AppRoutingService) {
   if (environment.production) {
-    return true;
+    return () => true;
   } else {
     return () => routeService.getRoutes();
   }
