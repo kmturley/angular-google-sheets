@@ -165,32 +165,36 @@ var AppRoutingService = /** @class */ (function () {
         this.slugifyPipe = slugifyPipe;
         this.routes = [];
     }
-    AppRoutingService.prototype.setupRoutes = function () {
-        this.routes.push({
-            pathMatch: 'full',
-            path: '',
-            loadChildren: './home/home.module#HomeModule',
-            data: {
-                name: 'Home'
-            }
-        });
-    };
     AppRoutingService.prototype.getRoutes = function () {
         var _this = this;
-        return new Promise(function (resolve, reject) {
-            _this.loadGapi().subscribe(function (a) {
-                _this.loadGapiAuth().subscribe(function (user) {
-                    if (common_1.isPlatformBrowser(_this.platformId)) {
+        console.log('getRoutes', environment_1.environment.production, common_1.isPlatformBrowser(this.platformId));
+        if (environment_1.environment.production) {
+            return new Promise(function (resolve, reject) {
+                _this.getData(resolve);
+            });
+        }
+        else {
+            return new Promise(function (resolve, reject) {
+                _this.loadGapi().subscribe(function (a) {
+                    _this.loadGapiAuth().subscribe(function (user) {
                         localStorage.setItem('token', user['getAuthResponse']().access_token);
-                    }
-                    _this.getData(resolve);
+                        _this.getData(resolve);
+                    });
                 });
             });
-        });
+        }
     };
     AppRoutingService.prototype.getData = function (resolve) {
         var _this = this;
         return this.api.get("" + environment_1.environment.API_URL + environment_1.environment.SHEET_ID + "?includeGridData=true", 'routes').subscribe(function (routes) {
+            _this.routes.push({
+                pathMatch: 'full',
+                path: '',
+                loadChildren: './home/home.module#HomeModule',
+                data: {
+                    name: 'Home'
+                }
+            });
             routes.forEach(function (route) {
                 _this.routes.push({
                     pathMatch: 'full',
@@ -205,45 +209,31 @@ var AppRoutingService = /** @class */ (function () {
         });
     };
     AppRoutingService.prototype.loadGapi = function () {
-        var _this = this;
         return rxjs_1.Observable.create(function (observer) {
-            if (common_1.isPlatformBrowser(_this.platformId)) {
-                var node = document.createElement('script');
-                node.src = 'https://apis.google.com/js/api.js';
-                node.type = 'text/javascript';
-                node.charset = 'utf-8';
-                document.getElementsByTagName('head')[0].appendChild(node);
-                node.onload = function () {
-                    observer.next(true);
-                    observer.complete();
-                };
-            }
-            else {
+            var node = document.createElement('script');
+            node.src = 'https://apis.google.com/js/api.js';
+            node.type = 'text/javascript';
+            node.charset = 'utf-8';
+            document.getElementsByTagName('head')[0].appendChild(node);
+            node.onload = function () {
                 observer.next(true);
                 observer.complete();
-            }
+            };
         });
     };
     AppRoutingService.prototype.loadGapiAuth = function () {
-        var _this = this;
         return rxjs_1.Observable.create(function (observer) {
-            if (common_1.isPlatformBrowser(_this.platformId)) {
-                window['gapi'].load('client:auth2', function () {
-                    var auth2 = window['gapi'].auth2.init({
-                        client_id: environment_1.environment.CLIENT_ID,
-                        scope: environment_1.environment.SCOPE
-                    });
-                    auth2.currentUser.listen(function (user) {
-                        observer.next(user);
-                        observer.complete();
-                    });
-                    auth2.signIn();
+            window['gapi'].load('client:auth2', function () {
+                var auth2 = window['gapi'].auth2.init({
+                    client_id: environment_1.environment.CLIENT_ID,
+                    scope: environment_1.environment.SCOPE
                 });
-            }
-            else {
-                observer.next({ name: 'test' });
-                observer.complete();
-            }
+                auth2.currentUser.listen(function (user) {
+                    observer.next(user);
+                    observer.complete();
+                });
+                auth2.signIn();
+            });
         });
     };
     return AppRoutingService;
@@ -318,17 +308,9 @@ exports.AppComponent = AppComponent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var common_1 = __webpack_require__(/*! @angular/common */ "@angular/common");
-var environment_1 = __webpack_require__(/*! ../environments/environment */ "./src/environments/environment.ts");
 var app_routing_service_1 = __webpack_require__(/*! ./app-routing.service */ "./src/app/app-routing.service.ts");
-function init(routeService, platformId) {
-    routeService.setupRoutes();
-    if (environment_1.environment.production && common_1.isPlatformBrowser(platformId)) {
-        return function () { return true; };
-    }
-    else {
-        return function () { return routeService.getRoutes(); };
-    }
+function init(routeService) {
+    return function () { return routeService.getRoutes(); };
 }
 exports.init = init;
 var AppModule = /** @class */ (function () {
@@ -382,7 +364,7 @@ var i21 = __webpack_require__(/*! ./app.module */ "./src/app/app.module.ts");
 var i22 = __webpack_require__(/*! @nguniversal/module-map-ngfactory-loader */ "@nguniversal/module-map-ngfactory-loader");
 var i23 = __webpack_require__(/*! ./shared/shared.module */ "./src/app/shared/shared.module.ts");
 var i24 = __webpack_require__(/*! ./app-routing.module */ "./src/app/app-routing.module.ts");
-var AppServerModuleNgFactory = i0.ɵcmf(i1.AppServerModule, [i2.AppComponent], function (_l) { return i0.ɵmod([i0.ɵmpd(512, i0.ComponentFactoryResolver, i0.ɵCodegenComponentFactoryResolver, [[8, [i3.ɵEmptyOutletComponentNgFactory, i4.AppComponentNgFactory]], [3, i0.ComponentFactoryResolver], i0.NgModuleRef]), i0.ɵmpd(5120, i0.LOCALE_ID, i0.ɵangular_packages_core_core_k, [[3, i0.LOCALE_ID]]), i0.ɵmpd(4608, i5.NgLocalization, i5.NgLocaleLocalization, [i0.LOCALE_ID, [2, i5.ɵangular_packages_common_common_a]]), i0.ɵmpd(5120, i0.IterableDiffers, i0.ɵangular_packages_core_core_i, []), i0.ɵmpd(5120, i0.KeyValueDiffers, i0.ɵangular_packages_core_core_j, []), i0.ɵmpd(4608, i6.DomSanitizer, i6.ɵDomSanitizerImpl, [i5.DOCUMENT]), i0.ɵmpd(6144, i0.Sanitizer, null, [i6.DomSanitizer]), i0.ɵmpd(4608, i6.HAMMER_GESTURE_CONFIG, i6.HammerGestureConfig, []), i0.ɵmpd(5120, i6.EVENT_MANAGER_PLUGINS, function (p0_0, p0_1, p0_2, p1_0, p2_0, p2_1, p2_2, p2_3, p3_0) { return [new i6.ɵDomEventsPlugin(p0_0, p0_1, p0_2), new i6.ɵKeyEventsPlugin(p1_0), new i6.ɵHammerGesturesPlugin(p2_0, p2_1, p2_2, p2_3), new i7.ɵangular_packages_platform_server_platform_server_d(p3_0)]; }, [i5.DOCUMENT, i0.NgZone, i0.PLATFORM_ID, i5.DOCUMENT, i5.DOCUMENT, i6.HAMMER_GESTURE_CONFIG, i0.ɵConsole, [2, i6.HAMMER_LOADER], i6.DOCUMENT]), i0.ɵmpd(4608, i6.EventManager, i6.EventManager, [i6.EVENT_MANAGER_PLUGINS, i0.NgZone]), i0.ɵmpd(135680, i6.ɵDomSharedStylesHost, i6.ɵDomSharedStylesHost, [i5.DOCUMENT]), i0.ɵmpd(4608, i6.ɵDomRendererFactory2, i6.ɵDomRendererFactory2, [i6.EventManager, i6.ɵDomSharedStylesHost]), i0.ɵmpd(4608, i7.ɵangular_packages_platform_server_platform_server_c, i7.ɵangular_packages_platform_server_platform_server_c, [i6.DOCUMENT, [2, i6.ɵTRANSITION_ID]]), i0.ɵmpd(6144, i6.ɵSharedStylesHost, null, [i7.ɵangular_packages_platform_server_platform_server_c]), i0.ɵmpd(4608, i7.ɵServerRendererFactory2, i7.ɵServerRendererFactory2, [i6.EventManager, i0.NgZone, i6.DOCUMENT, i6.ɵSharedStylesHost]), i0.ɵmpd(4608, i8.AnimationDriver, i8.ɵNoopAnimationDriver, []), i0.ɵmpd(5120, i8.ɵAnimationStyleNormalizer, i9.ɵangular_packages_platform_browser_animations_animations_c, []), i0.ɵmpd(4608, i8.ɵAnimationEngine, i9.ɵangular_packages_platform_browser_animations_animations_a, [i5.DOCUMENT, i8.AnimationDriver, i8.ɵAnimationStyleNormalizer]), i0.ɵmpd(5120, i0.RendererFactory2, i7.ɵangular_packages_platform_server_platform_server_a, [i7.ɵServerRendererFactory2, i8.ɵAnimationEngine, i0.NgZone]), i0.ɵmpd(4352, i0.Testability, null, []), i0.ɵmpd(4608, i10.ɵangular_packages_forms_forms_i, i10.ɵangular_packages_forms_forms_i, []), i0.ɵmpd(4608, i11.HttpXsrfTokenExtractor, i11.ɵangular_packages_common_http_http_g, [i5.DOCUMENT, i0.PLATFORM_ID, i11.ɵangular_packages_common_http_http_e]), i0.ɵmpd(4608, i11.ɵangular_packages_common_http_http_h, i11.ɵangular_packages_common_http_http_h, [i11.HttpXsrfTokenExtractor, i11.ɵangular_packages_common_http_http_f]), i0.ɵmpd(4608, i12.ɵTransferHttpCacheInterceptor, i12.ɵTransferHttpCacheInterceptor, [i0.ApplicationRef, i6.TransferState]), i0.ɵmpd(5120, i11.HTTP_INTERCEPTORS, function (p0_0, p1_0, p2_0) { return [p0_0, p1_0, new i13.AuthService(p2_0)]; }, [i11.ɵangular_packages_common_http_http_h, i12.ɵTransferHttpCacheInterceptor, i0.PLATFORM_ID]), i0.ɵmpd(4608, i11.ɵangular_packages_common_http_http_d, i11.ɵangular_packages_common_http_http_d, []), i0.ɵmpd(4608, i10.FormBuilder, i10.FormBuilder, []), i0.ɵmpd(5120, i14.ActivatedRoute, i14.ɵangular_packages_router_router_g, [i14.Router]), i0.ɵmpd(4608, i14.NoPreloading, i14.NoPreloading, []), i0.ɵmpd(6144, i14.PreloadingStrategy, null, [i14.NoPreloading]), i0.ɵmpd(135680, i14.RouterPreloader, i14.RouterPreloader, [i14.Router, i0.NgModuleFactoryLoader, i0.Compiler, i0.Injector, i14.PreloadingStrategy]), i0.ɵmpd(4608, i14.PreloadAllModules, i14.PreloadAllModules, []), i0.ɵmpd(4608, i5.ViewportScroller, i5.ɵNullViewportScroller, []), i0.ɵmpd(5120, i14.ɵangular_packages_router_router_n, i14.ɵangular_packages_router_router_c, [i14.Router, i5.ViewportScroller, i14.ROUTER_CONFIGURATION]), i0.ɵmpd(5120, i14.ROUTER_INITIALIZER, i14.ɵangular_packages_router_router_j, [i14.ɵangular_packages_router_router_h]), i0.ɵmpd(5120, i0.APP_BOOTSTRAP_LISTENER, function (p0_0) { return [p0_0]; }, [i14.ROUTER_INITIALIZER]), i0.ɵmpd(4608, i15.BrowserXhr, i7.ɵangular_packages_platform_server_platform_server_e, []), i0.ɵmpd(4608, i15.ResponseOptions, i15.BaseResponseOptions, []), i0.ɵmpd(4608, i15.XSRFStrategy, i7.ɵangular_packages_platform_server_platform_server_f, []), i0.ɵmpd(4608, i15.XHRBackend, i15.XHRBackend, [i15.BrowserXhr, i15.ResponseOptions, i15.XSRFStrategy]), i0.ɵmpd(4608, i15.RequestOptions, i15.BaseRequestOptions, []), i0.ɵmpd(5120, i15.Http, i7.ɵangular_packages_platform_server_platform_server_g, [i15.XHRBackend, i15.RequestOptions]), i0.ɵmpd(4608, i16.AnimationBuilder, i9.ɵBrowserAnimationBuilder, [i0.RendererFactory2, i6.DOCUMENT]), i0.ɵmpd(5120, i7.BEFORE_APP_SERIALIZED, function (p0_0, p0_1, p0_2) { return [i17.serializeTransferStateFactory(p0_0, p0_1, p0_2)]; }, [i5.DOCUMENT, i0.APP_ID, i6.TransferState]), i0.ɵmpd(1073742336, i5.CommonModule, i5.CommonModule, []), i0.ɵmpd(1024, i0.ErrorHandler, i6.ɵangular_packages_platform_browser_platform_browser_a, []), i0.ɵmpd(1024, i0.NgProbeToken, function () { return [i14.ɵangular_packages_router_router_b()]; }, []), i0.ɵmpd(512, i14.ɵangular_packages_router_router_h, i14.ɵangular_packages_router_router_h, [i0.Injector]), i0.ɵmpd(256, i0.APP_ID, "my-app", []), i0.ɵmpd(2048, i6.ɵTRANSITION_ID, null, [i0.APP_ID]), i0.ɵmpd(512, i11.XhrFactory, i7.ɵangular_packages_platform_server_platform_server_e, []), i0.ɵmpd(512, i11.HttpXhrBackend, i11.HttpXhrBackend, [i11.XhrFactory]), i0.ɵmpd(2048, i11.HttpBackend, null, [i11.HttpXhrBackend]), i0.ɵmpd(1024, i11.HttpHandler, i7.ɵangular_packages_platform_server_platform_server_h, [i11.HttpBackend, i0.Injector]), i0.ɵmpd(512, i11.HttpClient, i11.HttpClient, [i11.HttpHandler]), i0.ɵmpd(512, i6.TransferState, i6.TransferState, []), i0.ɵmpd(512, i18.ApiService, i18.ApiService, [i11.HttpClient, i0.PLATFORM_ID, i6.TransferState]), i0.ɵmpd(512, i19.SlugifyPipe, i19.SlugifyPipe, []), i0.ɵmpd(512, i20.AppRoutingService, i20.AppRoutingService, [i0.PLATFORM_ID, i18.ApiService, i19.SlugifyPipe]), i0.ɵmpd(1024, i0.APP_INITIALIZER, function (p0_0, p1_0, p2_0, p2_1, p2_2, p3_0, p3_1) { return [i6.ɵangular_packages_platform_browser_platform_browser_j(p0_0), i14.ɵangular_packages_router_router_i(p1_0), i6.ɵangular_packages_platform_browser_platform_browser_h(p2_0, p2_1, p2_2), i21.init(p3_0, p3_1)]; }, [[2, i0.NgProbeToken], i14.ɵangular_packages_router_router_h, i6.ɵTRANSITION_ID, i5.DOCUMENT, i0.Injector, i20.AppRoutingService, i0.PLATFORM_ID]), i0.ɵmpd(512, i0.ApplicationInitStatus, i0.ApplicationInitStatus, [[2, i0.APP_INITIALIZER]]), i0.ɵmpd(131584, i0.ApplicationRef, i0.ApplicationRef, [i0.NgZone, i0.ɵConsole, i0.Injector, i0.ErrorHandler, i0.ComponentFactoryResolver, i0.ApplicationInitStatus]), i0.ɵmpd(1073742336, i0.ApplicationModule, i0.ApplicationModule, [i0.ApplicationRef]), i0.ɵmpd(1073742336, i6.BrowserModule, i6.BrowserModule, [[3, i6.BrowserModule]]), i0.ɵmpd(1073742336, i6.BrowserTransferStateModule, i6.BrowserTransferStateModule, []), i0.ɵmpd(1073742336, i10.ɵangular_packages_forms_forms_bb, i10.ɵangular_packages_forms_forms_bb, []), i0.ɵmpd(1073742336, i10.FormsModule, i10.FormsModule, []), i0.ɵmpd(1073742336, i11.HttpClientXsrfModule, i11.HttpClientXsrfModule, []), i0.ɵmpd(1073742336, i11.HttpClientModule, i11.HttpClientModule, []), i0.ɵmpd(1073742336, i10.ReactiveFormsModule, i10.ReactiveFormsModule, []), i0.ɵmpd(1073742336, i12.TransferHttpCacheModule, i12.TransferHttpCacheModule, []), i0.ɵmpd(1024, i14.ɵangular_packages_router_router_a, i14.ɵangular_packages_router_router_e, [[3, i14.Router]]), i0.ɵmpd(512, i14.UrlSerializer, i14.DefaultUrlSerializer, []), i0.ɵmpd(512, i14.ChildrenOutletContexts, i14.ChildrenOutletContexts, []), i0.ɵmpd(256, i14.ROUTER_CONFIGURATION, {}, []), i0.ɵmpd(1024, i5.LocationStrategy, i14.ɵangular_packages_router_router_d, [i5.PlatformLocation, [2, i5.APP_BASE_HREF], i14.ROUTER_CONFIGURATION]), i0.ɵmpd(512, i5.Location, i5.Location, [i5.LocationStrategy]), i0.ɵmpd(512, i0.Compiler, i0.Compiler, []), i0.ɵmpd(512, i0.NgModuleFactoryLoader, i22.ModuleMapNgFactoryLoader, [i0.Compiler, i22.MODULE_MAP]), i0.ɵmpd(1024, i14.ROUTES, function () { return [[{ pathMatch: "full", path: "modules/home", loadChildren: "./home/home.module#HomeModule" }, { pathMatch: "full", path: "modules/page", loadChildren: "./page/page.module#PageModule" }]]; }, []), i0.ɵmpd(1024, i14.Router, i14.ɵangular_packages_router_router_f, [i0.ApplicationRef, i14.UrlSerializer, i14.ChildrenOutletContexts, i5.Location, i0.Injector, i0.NgModuleFactoryLoader, i0.Compiler, i14.ROUTES, i14.ROUTER_CONFIGURATION, [2, i14.UrlHandlingStrategy], [2, i14.RouteReuseStrategy]]), i0.ɵmpd(1073742336, i14.RouterModule, i14.RouterModule, [[2, i14.ɵangular_packages_router_router_a], [2, i14.Router]]), i0.ɵmpd(1073742336, i23.SharedModule, i23.SharedModule, []), i0.ɵmpd(1073742336, i24.AppRoutingModule, i24.AppRoutingModule, []), i0.ɵmpd(1073742336, i21.AppModule, i21.AppModule, []), i0.ɵmpd(1073742336, i15.HttpModule, i15.HttpModule, []), i0.ɵmpd(1073742336, i9.NoopAnimationsModule, i9.NoopAnimationsModule, []), i0.ɵmpd(1073742336, i7.ServerModule, i7.ServerModule, []), i0.ɵmpd(1073742336, i22.ModuleMapLoaderModule, i22.ModuleMapLoaderModule, []), i0.ɵmpd(1073742336, i17.ServerTransferStateJsonModule, i17.ServerTransferStateJsonModule, []), i0.ɵmpd(1073742336, i1.AppServerModule, i1.AppServerModule, []), i0.ɵmpd(256, i0.ɵAPP_ROOT, true, []), i0.ɵmpd(256, i11.ɵangular_packages_common_http_http_e, "XSRF-TOKEN", []), i0.ɵmpd(256, i11.ɵangular_packages_common_http_http_f, "X-XSRF-TOKEN", []), i0.ɵmpd(256, i9.ANIMATION_MODULE_TYPE, "NoopAnimations", [])]); });
+var AppServerModuleNgFactory = i0.ɵcmf(i1.AppServerModule, [i2.AppComponent], function (_l) { return i0.ɵmod([i0.ɵmpd(512, i0.ComponentFactoryResolver, i0.ɵCodegenComponentFactoryResolver, [[8, [i3.ɵEmptyOutletComponentNgFactory, i4.AppComponentNgFactory]], [3, i0.ComponentFactoryResolver], i0.NgModuleRef]), i0.ɵmpd(5120, i0.LOCALE_ID, i0.ɵangular_packages_core_core_k, [[3, i0.LOCALE_ID]]), i0.ɵmpd(4608, i5.NgLocalization, i5.NgLocaleLocalization, [i0.LOCALE_ID, [2, i5.ɵangular_packages_common_common_a]]), i0.ɵmpd(5120, i0.IterableDiffers, i0.ɵangular_packages_core_core_i, []), i0.ɵmpd(5120, i0.KeyValueDiffers, i0.ɵangular_packages_core_core_j, []), i0.ɵmpd(4608, i6.DomSanitizer, i6.ɵDomSanitizerImpl, [i5.DOCUMENT]), i0.ɵmpd(6144, i0.Sanitizer, null, [i6.DomSanitizer]), i0.ɵmpd(4608, i6.HAMMER_GESTURE_CONFIG, i6.HammerGestureConfig, []), i0.ɵmpd(5120, i6.EVENT_MANAGER_PLUGINS, function (p0_0, p0_1, p0_2, p1_0, p2_0, p2_1, p2_2, p2_3, p3_0) { return [new i6.ɵDomEventsPlugin(p0_0, p0_1, p0_2), new i6.ɵKeyEventsPlugin(p1_0), new i6.ɵHammerGesturesPlugin(p2_0, p2_1, p2_2, p2_3), new i7.ɵangular_packages_platform_server_platform_server_d(p3_0)]; }, [i5.DOCUMENT, i0.NgZone, i0.PLATFORM_ID, i5.DOCUMENT, i5.DOCUMENT, i6.HAMMER_GESTURE_CONFIG, i0.ɵConsole, [2, i6.HAMMER_LOADER], i6.DOCUMENT]), i0.ɵmpd(4608, i6.EventManager, i6.EventManager, [i6.EVENT_MANAGER_PLUGINS, i0.NgZone]), i0.ɵmpd(135680, i6.ɵDomSharedStylesHost, i6.ɵDomSharedStylesHost, [i5.DOCUMENT]), i0.ɵmpd(4608, i6.ɵDomRendererFactory2, i6.ɵDomRendererFactory2, [i6.EventManager, i6.ɵDomSharedStylesHost]), i0.ɵmpd(4608, i7.ɵangular_packages_platform_server_platform_server_c, i7.ɵangular_packages_platform_server_platform_server_c, [i6.DOCUMENT, [2, i6.ɵTRANSITION_ID]]), i0.ɵmpd(6144, i6.ɵSharedStylesHost, null, [i7.ɵangular_packages_platform_server_platform_server_c]), i0.ɵmpd(4608, i7.ɵServerRendererFactory2, i7.ɵServerRendererFactory2, [i6.EventManager, i0.NgZone, i6.DOCUMENT, i6.ɵSharedStylesHost]), i0.ɵmpd(4608, i8.AnimationDriver, i8.ɵNoopAnimationDriver, []), i0.ɵmpd(5120, i8.ɵAnimationStyleNormalizer, i9.ɵangular_packages_platform_browser_animations_animations_c, []), i0.ɵmpd(4608, i8.ɵAnimationEngine, i9.ɵangular_packages_platform_browser_animations_animations_a, [i5.DOCUMENT, i8.AnimationDriver, i8.ɵAnimationStyleNormalizer]), i0.ɵmpd(5120, i0.RendererFactory2, i7.ɵangular_packages_platform_server_platform_server_a, [i7.ɵServerRendererFactory2, i8.ɵAnimationEngine, i0.NgZone]), i0.ɵmpd(4352, i0.Testability, null, []), i0.ɵmpd(4608, i10.ɵangular_packages_forms_forms_i, i10.ɵangular_packages_forms_forms_i, []), i0.ɵmpd(4608, i11.HttpXsrfTokenExtractor, i11.ɵangular_packages_common_http_http_g, [i5.DOCUMENT, i0.PLATFORM_ID, i11.ɵangular_packages_common_http_http_e]), i0.ɵmpd(4608, i11.ɵangular_packages_common_http_http_h, i11.ɵangular_packages_common_http_http_h, [i11.HttpXsrfTokenExtractor, i11.ɵangular_packages_common_http_http_f]), i0.ɵmpd(4608, i12.ɵTransferHttpCacheInterceptor, i12.ɵTransferHttpCacheInterceptor, [i0.ApplicationRef, i6.TransferState]), i0.ɵmpd(5120, i11.HTTP_INTERCEPTORS, function (p0_0, p1_0, p2_0) { return [p0_0, p1_0, new i13.AuthService(p2_0)]; }, [i11.ɵangular_packages_common_http_http_h, i12.ɵTransferHttpCacheInterceptor, i0.PLATFORM_ID]), i0.ɵmpd(4608, i11.ɵangular_packages_common_http_http_d, i11.ɵangular_packages_common_http_http_d, []), i0.ɵmpd(4608, i10.FormBuilder, i10.FormBuilder, []), i0.ɵmpd(5120, i14.ActivatedRoute, i14.ɵangular_packages_router_router_g, [i14.Router]), i0.ɵmpd(4608, i14.NoPreloading, i14.NoPreloading, []), i0.ɵmpd(6144, i14.PreloadingStrategy, null, [i14.NoPreloading]), i0.ɵmpd(135680, i14.RouterPreloader, i14.RouterPreloader, [i14.Router, i0.NgModuleFactoryLoader, i0.Compiler, i0.Injector, i14.PreloadingStrategy]), i0.ɵmpd(4608, i14.PreloadAllModules, i14.PreloadAllModules, []), i0.ɵmpd(4608, i5.ViewportScroller, i5.ɵNullViewportScroller, []), i0.ɵmpd(5120, i14.ɵangular_packages_router_router_n, i14.ɵangular_packages_router_router_c, [i14.Router, i5.ViewportScroller, i14.ROUTER_CONFIGURATION]), i0.ɵmpd(5120, i14.ROUTER_INITIALIZER, i14.ɵangular_packages_router_router_j, [i14.ɵangular_packages_router_router_h]), i0.ɵmpd(5120, i0.APP_BOOTSTRAP_LISTENER, function (p0_0) { return [p0_0]; }, [i14.ROUTER_INITIALIZER]), i0.ɵmpd(4608, i15.BrowserXhr, i7.ɵangular_packages_platform_server_platform_server_e, []), i0.ɵmpd(4608, i15.ResponseOptions, i15.BaseResponseOptions, []), i0.ɵmpd(4608, i15.XSRFStrategy, i7.ɵangular_packages_platform_server_platform_server_f, []), i0.ɵmpd(4608, i15.XHRBackend, i15.XHRBackend, [i15.BrowserXhr, i15.ResponseOptions, i15.XSRFStrategy]), i0.ɵmpd(4608, i15.RequestOptions, i15.BaseRequestOptions, []), i0.ɵmpd(5120, i15.Http, i7.ɵangular_packages_platform_server_platform_server_g, [i15.XHRBackend, i15.RequestOptions]), i0.ɵmpd(4608, i16.AnimationBuilder, i9.ɵBrowserAnimationBuilder, [i0.RendererFactory2, i6.DOCUMENT]), i0.ɵmpd(5120, i7.BEFORE_APP_SERIALIZED, function (p0_0, p0_1, p0_2) { return [i17.serializeTransferStateFactory(p0_0, p0_1, p0_2)]; }, [i5.DOCUMENT, i0.APP_ID, i6.TransferState]), i0.ɵmpd(1073742336, i5.CommonModule, i5.CommonModule, []), i0.ɵmpd(1024, i0.ErrorHandler, i6.ɵangular_packages_platform_browser_platform_browser_a, []), i0.ɵmpd(1024, i0.NgProbeToken, function () { return [i14.ɵangular_packages_router_router_b()]; }, []), i0.ɵmpd(512, i14.ɵangular_packages_router_router_h, i14.ɵangular_packages_router_router_h, [i0.Injector]), i0.ɵmpd(256, i0.APP_ID, "my-app", []), i0.ɵmpd(2048, i6.ɵTRANSITION_ID, null, [i0.APP_ID]), i0.ɵmpd(512, i11.XhrFactory, i7.ɵangular_packages_platform_server_platform_server_e, []), i0.ɵmpd(512, i11.HttpXhrBackend, i11.HttpXhrBackend, [i11.XhrFactory]), i0.ɵmpd(2048, i11.HttpBackend, null, [i11.HttpXhrBackend]), i0.ɵmpd(1024, i11.HttpHandler, i7.ɵangular_packages_platform_server_platform_server_h, [i11.HttpBackend, i0.Injector]), i0.ɵmpd(512, i11.HttpClient, i11.HttpClient, [i11.HttpHandler]), i0.ɵmpd(512, i6.TransferState, i6.TransferState, []), i0.ɵmpd(512, i18.ApiService, i18.ApiService, [i11.HttpClient, i0.PLATFORM_ID, i6.TransferState]), i0.ɵmpd(512, i19.SlugifyPipe, i19.SlugifyPipe, []), i0.ɵmpd(512, i20.AppRoutingService, i20.AppRoutingService, [i0.PLATFORM_ID, i18.ApiService, i19.SlugifyPipe]), i0.ɵmpd(1024, i0.APP_INITIALIZER, function (p0_0, p1_0, p2_0, p2_1, p2_2, p3_0) { return [i6.ɵangular_packages_platform_browser_platform_browser_j(p0_0), i14.ɵangular_packages_router_router_i(p1_0), i6.ɵangular_packages_platform_browser_platform_browser_h(p2_0, p2_1, p2_2), i21.init(p3_0)]; }, [[2, i0.NgProbeToken], i14.ɵangular_packages_router_router_h, i6.ɵTRANSITION_ID, i5.DOCUMENT, i0.Injector, i20.AppRoutingService]), i0.ɵmpd(512, i0.ApplicationInitStatus, i0.ApplicationInitStatus, [[2, i0.APP_INITIALIZER]]), i0.ɵmpd(131584, i0.ApplicationRef, i0.ApplicationRef, [i0.NgZone, i0.ɵConsole, i0.Injector, i0.ErrorHandler, i0.ComponentFactoryResolver, i0.ApplicationInitStatus]), i0.ɵmpd(1073742336, i0.ApplicationModule, i0.ApplicationModule, [i0.ApplicationRef]), i0.ɵmpd(1073742336, i6.BrowserModule, i6.BrowserModule, [[3, i6.BrowserModule]]), i0.ɵmpd(1073742336, i6.BrowserTransferStateModule, i6.BrowserTransferStateModule, []), i0.ɵmpd(1073742336, i10.ɵangular_packages_forms_forms_bb, i10.ɵangular_packages_forms_forms_bb, []), i0.ɵmpd(1073742336, i10.FormsModule, i10.FormsModule, []), i0.ɵmpd(1073742336, i11.HttpClientXsrfModule, i11.HttpClientXsrfModule, []), i0.ɵmpd(1073742336, i11.HttpClientModule, i11.HttpClientModule, []), i0.ɵmpd(1073742336, i10.ReactiveFormsModule, i10.ReactiveFormsModule, []), i0.ɵmpd(1073742336, i12.TransferHttpCacheModule, i12.TransferHttpCacheModule, []), i0.ɵmpd(1024, i14.ɵangular_packages_router_router_a, i14.ɵangular_packages_router_router_e, [[3, i14.Router]]), i0.ɵmpd(512, i14.UrlSerializer, i14.DefaultUrlSerializer, []), i0.ɵmpd(512, i14.ChildrenOutletContexts, i14.ChildrenOutletContexts, []), i0.ɵmpd(256, i14.ROUTER_CONFIGURATION, {}, []), i0.ɵmpd(1024, i5.LocationStrategy, i14.ɵangular_packages_router_router_d, [i5.PlatformLocation, [2, i5.APP_BASE_HREF], i14.ROUTER_CONFIGURATION]), i0.ɵmpd(512, i5.Location, i5.Location, [i5.LocationStrategy]), i0.ɵmpd(512, i0.Compiler, i0.Compiler, []), i0.ɵmpd(512, i0.NgModuleFactoryLoader, i22.ModuleMapNgFactoryLoader, [i0.Compiler, i22.MODULE_MAP]), i0.ɵmpd(1024, i14.ROUTES, function () { return [[{ pathMatch: "full", path: "modules/home", loadChildren: "./home/home.module#HomeModule" }, { pathMatch: "full", path: "modules/page", loadChildren: "./page/page.module#PageModule" }]]; }, []), i0.ɵmpd(1024, i14.Router, i14.ɵangular_packages_router_router_f, [i0.ApplicationRef, i14.UrlSerializer, i14.ChildrenOutletContexts, i5.Location, i0.Injector, i0.NgModuleFactoryLoader, i0.Compiler, i14.ROUTES, i14.ROUTER_CONFIGURATION, [2, i14.UrlHandlingStrategy], [2, i14.RouteReuseStrategy]]), i0.ɵmpd(1073742336, i14.RouterModule, i14.RouterModule, [[2, i14.ɵangular_packages_router_router_a], [2, i14.Router]]), i0.ɵmpd(1073742336, i23.SharedModule, i23.SharedModule, []), i0.ɵmpd(1073742336, i24.AppRoutingModule, i24.AppRoutingModule, []), i0.ɵmpd(1073742336, i21.AppModule, i21.AppModule, []), i0.ɵmpd(1073742336, i15.HttpModule, i15.HttpModule, []), i0.ɵmpd(1073742336, i9.NoopAnimationsModule, i9.NoopAnimationsModule, []), i0.ɵmpd(1073742336, i7.ServerModule, i7.ServerModule, []), i0.ɵmpd(1073742336, i22.ModuleMapLoaderModule, i22.ModuleMapLoaderModule, []), i0.ɵmpd(1073742336, i17.ServerTransferStateJsonModule, i17.ServerTransferStateJsonModule, []), i0.ɵmpd(1073742336, i1.AppServerModule, i1.AppServerModule, []), i0.ɵmpd(256, i0.ɵAPP_ROOT, true, []), i0.ɵmpd(256, i11.ɵangular_packages_common_http_http_e, "XSRF-TOKEN", []), i0.ɵmpd(256, i11.ɵangular_packages_common_http_http_f, "X-XSRF-TOKEN", []), i0.ɵmpd(256, i9.ANIMATION_MODULE_TYPE, "NoopAnimations", [])]); });
 exports.AppServerModuleNgFactory = AppServerModuleNgFactory;
 
 

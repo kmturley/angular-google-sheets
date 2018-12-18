@@ -2,9 +2,6 @@ import { APP_INITIALIZER, NgModule, PLATFORM_ID } from '@angular/core';
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { isPlatformBrowser } from '@angular/common';
-
-import { environment } from '../environments/environment';
 
 import { ApiService } from './shared/api.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,13 +13,8 @@ import { AppComponent } from './app.component';
 import { TransferHttpCacheModule } from '@nguniversal/common';
 import { NavigationComponent } from './navigation/navigation.component';
 
-export function init(routeService: AppRoutingService, platformId: string) {
-  routeService.setupRoutes();
-  if (environment.production && isPlatformBrowser(platformId)) {
-    return () => true;
-  } else {
-    return () => routeService.getRoutes();
-  }
+export function init(routeService: AppRoutingService) {
+  return () => routeService.getRoutes();
 }
 
 @NgModule({
@@ -44,7 +36,7 @@ export function init(routeService: AppRoutingService, platformId: string) {
     {
       provide: APP_INITIALIZER,
       useFactory: init,
-      deps: [AppRoutingService, PLATFORM_ID],
+      deps: [AppRoutingService],
       multi: true
     },
     {
