@@ -11,7 +11,7 @@ exports.environment = {
           https://www.googleapis.com/auth/drive.file',
     SHEET_ID: '1PGFoY15Wi0RFxjycqF_oXYKdjH8IM5k3_IxJLFI90aU',
     SLIDE_ID: '1MO9cDahRyaSRF7zsn84iWBC4evbIb809VhGFX_VdO_M',
-    TOKEN: 'ya29.Gl12BolsFJu5j1nW2kMweMadEtxsMrT7ZWzgex4KG2euasMKT4_UOQxivlPCBXWYKBYdECb9stCJeSNPqrN3ASn5LWQuvGJ-teW1kQw__3vDsmB2mfZ18eMivMk_c0E',
+    TOKEN: 'ya29.Gl12BjKgH3Mzutazo1otpRUXmlmYLy8XPV50oCXX0Jmj_YxdahW2x-yFViN0jMZA3sFqTwrK9pwcSHi14ecHTkkcCfR2w9h_d1yxu7bVlDzU7ty5YWXc5N1h4DkCc7M',
     production: true
 };
 //# sourceMappingURL=environment.prod.js.map
