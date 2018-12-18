@@ -3,8 +3,6 @@ import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-bro
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { environment } from '../environments/environment';
-
 import { ApiService } from './shared/api.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppRoutingService } from './app-routing.service';
@@ -16,11 +14,7 @@ import { TransferHttpCacheModule } from '@nguniversal/common';
 import { NavigationComponent } from './navigation/navigation.component';
 
 export function init(routeService: AppRoutingService) {
-  if (environment.production) {
-    return true;
-  } else {
-    return () => routeService.getRoutes();
-  }
+  return () => routeService.getRoutes();
 }
 
 @NgModule({

@@ -18,16 +18,20 @@ export class AppRoutingService {
   ) { }
 
   getRoutes() {
-    return new Promise((resolve, reject) => {
-      this.loadGapi().subscribe((a) => {
-        this.loadGapiAuth().subscribe((user: Object) => {
-          if (isPlatformBrowser(this.platformId)) {
+    if (environment.production) {
+      return new Promise((resolve, reject) => {
+        this.getData(resolve);
+      });
+    } else if (isPlatformBrowser(this.platformId)) {
+      return new Promise((resolve, reject) => {
+        this.loadGapi().subscribe((a) => {
+          this.loadGapiAuth().subscribe((user: Object) => {
             localStorage.setItem('token', user['getAuthResponse']().access_token);
-          }
-          this.getData(resolve);
+            this.getData(resolve);
+          });
         });
       });
-    });
+    }
   }
 
   getData(resolve) {
@@ -56,41 +60,31 @@ export class AppRoutingService {
 
   private loadGapi(): Observable<void> {
     return Observable.create((observer: Observer<boolean>) => {
-      if (isPlatformBrowser(this.platformId)) {
-        const node = document.createElement('script');
-        node.src = 'https://apis.google.com/js/api.js';
-        node.type = 'text/javascript';
-        node.charset = 'utf-8';
-        document.getElementsByTagName('head')[0].appendChild(node);
-        node.onload = () => {
-          observer.next(true);
-          observer.complete();
-        };
-      } else {
+      const node = document.createElement('script');
+      node.src = 'https://apis.google.com/js/api.js';
+      node.type = 'text/javascript';
+      node.charset = 'utf-8';
+      document.getElementsByTagName('head')[0].appendChild(node);
+      node.onload = () => {
         observer.next(true);
         observer.complete();
-      }
+      };
     });
   }
 
   private loadGapiAuth(): Observable<Object> {
     return Observable.create((observer: Observer<Object>) => {
-      if (isPlatformBrowser(this.platformId)) {
-        window['gapi'].load('client:auth2', () => {
-          const auth2 = window['gapi'].auth2.init({
-            client_id: environment.CLIENT_ID,
-            scope: environment.SCOPE
-          });
-          auth2.currentUser.listen((user: Object) => {
-            observer.next(user);
-            observer.complete();
-          });
-          auth2.signIn();
+      window['gapi'].load('client:auth2', () => {
+        const auth2 = window['gapi'].auth2.init({
+          client_id: environment.CLIENT_ID,
+          scope: environment.SCOPE
         });
-      } else {
-        observer.next({ name: 'test' });
-        observer.complete();
-      }
+        auth2.currentUser.listen((user: Object) => {
+          observer.next(user);
+          observer.complete();
+        });
+        auth2.signIn();
+      });
     });
   }
 }
