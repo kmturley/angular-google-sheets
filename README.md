@@ -52,7 +52,7 @@ Then run the command to build static:
 
 Or to build with custom base url:
 
-    ng build --prod --base-href https://kmturley.co.uk/angular-google-sheets/dist/browser/
+    ng build --prod --base-href https://kimturley.co.uk/angular-google-sheets/dist/browser/
     ng run angular-google-sheets:server:production
     npm run compile:server && npm run generate:prerender
 
