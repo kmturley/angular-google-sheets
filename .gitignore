@@ -30,3 +30,5 @@ webpack.records.json
 
 # Ignore sensitive env info
 src/environments
+credentials.json
+token.json
