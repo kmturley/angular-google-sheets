@@ -1,24 +1,20 @@
-import { environment } from './src/environments/environment.prod';
-
-const request = require('request');
+const fs = require('fs');
+const { join } = require('path');
 const slugify = require('slugify');
 const routes = ['/'];
-const req = request.defaults({
-  headers: {
-    'Authorization': `Bearer ${environment.TOKEN}`
-  }
-});
+
+const JSON_FOLDER = join(process.cwd(), 'browser/assets/json');
 
 export function getPaths() {
   return new Promise((resolve, reject) => {
-    req.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, (err, res, data) => {
-      if (err) { return reject(err); }
-      data = JSON.parse(data);
-      if (data['error']) { return reject(data); }
-      const rows = data['sheets'][0]['data'][0]['rowData'];
+    fs.readFile(`${JSON_FOLDER}/pages.json`, (err, data) => {
+      if (err) {
+        return console.error(err);
+      }
+      const rows = JSON.parse(data);
       rows.forEach((rowItem, rowIndex) => {
-        if (rowIndex > 0 && rowItem['values'][0].formattedValue) {
-          routes.push(slugify(rowItem['values'][0].formattedValue, { lower: true }));
+        if (rowIndex > 0 && rowItem !== '') {
+          routes.push(slugify(rowItem.name, { lower: true }));
         }
       });
       resolve(routes);

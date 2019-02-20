@@ -101,6 +101,7 @@ function loadData(auth) {
           row.map((field, fieldIndex) => {
             if (field.indexOf('\n') > -1) {
               field = field.split('\n');
+              field = field.filter(v => v !== '');
             }
             rowNew[rows[0][fieldIndex]] = field;
           });

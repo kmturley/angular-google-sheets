@@ -10,8 +10,10 @@ enableProdMode();
 
 // Import module map for lazy loading
 import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
-import {renderModuleFactory} from './utils';
+import {renderModuleFactory} from '@angular/platform-server';
 import {getPaths} from './static.paths';
+
+const shell = require('shelljs');
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
 const {AppServerModuleNgFactory, LAZY_MODULE_MAP} = require('./server/main');
@@ -23,23 +25,15 @@ const index = readFileSync(join('browser', 'index.html'), 'utf8');
 
 let previousRender = Promise.resolve();
 
-
 getPaths().then((ROUTES: any[]) => {
-  console.log('ROUTES', ROUTES);
-
-  // create json folder
-  const jsonPath = join(BROWSER_FOLDER, 'json');
-  if (!existsSync(jsonPath)) {
-    mkdirSync(jsonPath);
-  }
-
-  // Iterate each route path
+  console.log('ROUTES', ROUTES); // Iterate each route path
   ROUTES.forEach(route => {
-    const fullPath = join(BROWSER_FOLDER, route);
+    const routeFolder = join(BROWSER_FOLDER, route);
 
     // Make sure the directory structure is there
-    if (!existsSync(fullPath)) {
-      mkdirSync(fullPath);
+    if (!existsSync(routeFolder)) {
+      console.log('+', routeFolder);
+      shell.mkdir('-p', routeFolder);
     }
 
     // Writes rendered HTML to index.html, replacing the file if it already exists.
@@ -49,18 +43,13 @@ getPaths().then((ROUTES: any[]) => {
       extraProviders: [
         provideModuleMap(LAZY_MODULE_MAP)
       ]
-    })).then((res: { output: string, data: object }) => {
+    })).then((html: string) => {
       // write html file
-      console.log('WRITE HTML FILE', join(route, 'index.html'));
-      writeFileSync(join(fullPath, 'index.html'), res.output);
-
-      // write json files from TransferState objects
-      Object.keys(res.data).forEach(item => {
-        // console.log('WRITE JSON FILE', join('json', item + '.json'));
-        // writeFileSync(join(jsonPath, item + 'routes.json'), JSON.stringify(res.data[item]));
-        console.log('WRITE JSON FILE', join('json', 'routes.json'));
-        writeFileSync(join(jsonPath, 'routes.json'), JSON.stringify(res.data[item]));
-      });
+      const htmlFile = join(routeFolder, 'index.html');
+      console.log('+', htmlFile);
+      writeFileSync(htmlFile, html);
+    }).catch((err) => {
+      console.error(err);
     });
   });
 });

@@ -25,7 +25,7 @@ export class ApiService {
       return of(item);
     } else {
       if (environment.production && isPlatformBrowser(this.platformId)) {
-        url = `./json/${id}.json`;
+        url = `/assets/json/${id}.json`;
       }
       return this.http.get(url).pipe(
         map(data => {
@@ -33,30 +33,7 @@ export class ApiService {
           if (environment.production && isPlatformBrowser(this.platformId)) {
             items = data;
           } else {
-            items = [];
-            if (data['sheets']) {
-              const rows = data['sheets'][0]['data'][0]['rowData'];
-              rows.forEach((row, index) => {
-                if (index > 0) {
-                  const newRow = {};
-                  row['values'].forEach((rowItem, rowIndex) => {
-                    const rowKey = rows[0]['values'][rowIndex].formattedValue;
-                    let rowValue = rowItem.formattedValue;
-                    if (rowKey && rowValue) {
-                      if (rowKey.charAt(rowKey.length - 1) === 's') {
-                        rowValue = rowItem.formattedValue.split('\n');
-                      }
-                      newRow[rowKey] = rowValue;
-                    }
-                  });
-                  if (newRow['name']) {
-                    items.push(newRow);
-                  }
-                }
-              });
-            } else {
-              items = data;
-            }
+            items = data;
           }
           console.log('items', items);
           this.transferState.set(key, items);

@@ -48,7 +48,8 @@ export class HomeComponent implements OnInit {
       this.selectTechnologies = new FormControl(params['technologies'] || 'all');
       this.selectYears = new FormControl(params['years'] || 'all');
       this.inputSearch = new FormControl(params['search'] || '');
-      this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(pages => {
+      this.api.get('/assets/json/pages.json', 'routes').subscribe(pages => {
+        console.log('pages', pages);
         this.pages = pages.filter((page) => {
           // TODO make this more DRY
           this.activities = this.activities ? this.activities.concat(page.activities) : page.activities;
@@ -56,11 +57,11 @@ export class HomeComponent implements OnInit {
           this.locations = this.locations ? this.locations.concat(page.locations) : page.locations;
           this.technologies = this.technologies ? this.technologies.concat(page.technologies) : page.technologies;
           this.years = this.years ? this.years.concat(page.years) : page.years;
-          this.activities = this.activities.filter((item, pos) => this.activities.indexOf(item) === pos);
-          this.industries = this.industries.filter((item, pos) => this.industries.indexOf(item) === pos);
-          this.locations = this.locations.filter((item, pos) => this.locations.indexOf(item) === pos);
-          this.technologies = this.technologies.filter((item, pos) => this.technologies.indexOf(item) === pos);
-          this.years = this.years.filter((item, pos) => this.years.indexOf(item) === pos);
+          this.activities = this.activities.filter((item, pos) => this.activities.indexOf(item) === pos).sort();
+          this.industries = this.industries.filter((item, pos) => this.industries.indexOf(item) === pos).sort();
+          this.locations = this.locations.filter((item, pos) => this.locations.indexOf(item) === pos).sort();
+          this.technologies = this.technologies.filter((item, pos) => this.technologies.indexOf(item) === pos).sort();
+          this.years = this.years.filter((item, pos) => this.years.indexOf(item) === pos).sort();
           if (this.selectActivities.value !== 'all') {
             const results = page.activities.filter((activity) => {
               return this.slugifyPipe.transform(activity) === this.selectActivities.value;

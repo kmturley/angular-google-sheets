@@ -7,6 +7,15 @@ Example project using:
 * SCSS
 
 
+## Versions
+
+Dynamic version (Updates in the browser):
+https://github.com/kmturley/angular-google-sheets/tree/feature/dynamic
+
+Static version (Updates via command-line):
+https://github.com/kmturley/angular-google-sheets/tree/feature/static
+
+
 ## Installation
 
 Install dependencies using:

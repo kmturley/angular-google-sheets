@@ -62,7 +62,7 @@ export class PageComponent implements OnInit {
 
   ngOnInit() {
     this.route.data.subscribe((data) => {
-      this.api.get(`${environment.API_URL}${environment.SHEET_ID}?includeGridData=true`, 'routes').subscribe(pages => {
+      this.api.get('/assets/json/pages.json', 'routes').subscribe(pages => {
         this.page = pages.filter((page: Page) => {
           return page.name === data.name;
         })[0];
